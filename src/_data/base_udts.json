@@ -1,0 +1,10 @@
+[
+  "Identifier",
+  "Timestamp",
+  "Quality",
+  "Value",
+  "Range",
+  "Quantity",
+  "Duration",
+  "Status"
+]

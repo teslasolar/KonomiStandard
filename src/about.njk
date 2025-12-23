@@ -1,0 +1,80 @@
+---
+layout: base.njk
+title: About
+---
+
+<h1 class="text-3xl font-bold mb-6">About Konomi Standard</h1>
+
+<div class="space-y-6 text-konomi-text">
+  <section>
+    <h2 class="section-heading">What is Konomi Standard?</h2>
+    <p class="text-konomi-muted">
+      Konomi Standard is a self-defining industrial standards compression format. It provides a
+      unified way to represent and work with multiple industrial automation standards including
+      ISA-95, ISA-88, ISA-101, ISA-18.2, OPC-UA, MQTT Sparkplug, Modbus, and KPI metrics.
+    </p>
+  </section>
+
+  <section>
+    <h2 class="section-heading">Key Features</h2>
+    <ul class="list-disc list-inside space-y-2 text-konomi-muted">
+      <li>UDT-first design: Everything defined as User Defined Types</li>
+      <li>Self-describing: Layer 0 defines how all other layers are structured</li>
+      <li>Crosswalks: Built-in mappings between different standards</li>
+      <li>Compression: Maximum information in minimum tokens</li>
+      <li>Hierarchical: Clear layering from meta-standard to specific protocols</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2 class="section-heading">Layer Architecture</h2>
+    <div class="space-y-2 text-sm">
+      <div class="udt-field"><span class="text-konomi-accent">Layer 0:</span> Meta-standard (how standards are defined)</div>
+      <div class="udt-field"><span class="text-konomi-accent">Layer 1:</span> Base UDTs (primitives all standards use)</div>
+      <div class="udt-field"><span class="text-konomi-accent">Layer 2:</span> ISA-95 (Enterprise↔Control Integration)</div>
+      <div class="udt-field"><span class="text-konomi-accent">Layer 3:</span> ISA-88 (Batch Control)</div>
+      <div class="udt-field"><span class="text-konomi-accent">Layer 4:</span> ISA-101 (HMI Design)</div>
+      <div class="udt-field"><span class="text-konomi-accent">Layer 5:</span> ISA-18.2 (Alarm Management)</div>
+      <div class="udt-field"><span class="text-konomi-accent">Layer 6:</span> OPC-UA (Communication)</div>
+      <div class="udt-field"><span class="text-konomi-accent">Layer 7:</span> MQTT/Sparkplug (Messaging)</div>
+      <div class="udt-field"><span class="text-konomi-accent">Layer 8:</span> Modbus (Field Protocol)</div>
+      <div class="udt-field"><span class="text-konomi-accent">Layer 9:</span> KPIs (Performance Metrics)</div>
+    </div>
+  </section>
+
+  <section>
+    <h2 class="section-heading">Usage</h2>
+    <div class="bg-konomi-surface p-4 rounded border border-konomi-primary/30">
+      <pre class="text-konomi-text text-sm"><code>from konomi_standard import KS
+
+# Parse: human standard → compressed
+compressed = KS.parse("ISA-95", source_doc)
+
+# Expand: compressed → implementation
+impl = KS.expand("ISA-95", target="python")
+
+# Validate: impl → compliant?
+report = KS.validate(impl, "ISA-95")
+
+# Crosswalk: map between standards
+mapped = KS.crosswalk(entity, "ISA-95", "ISA-88")
+
+# Generate: template → code
+code = KS.generate("ISA-88.Batch", lang="python")</code></pre>
+    </div>
+  </section>
+
+  <section>
+    <h2 class="section-heading">Goal</h2>
+    <p class="text-konomi-muted">
+      The goal is to create a compression format for industrial standards that is:
+    </p>
+    <ul class="list-disc list-inside space-y-1 text-konomi-muted mt-2">
+      <li>Self-describing and machine-readable</li>
+      <li>Compact yet comprehensive</li>
+      <li>Interoperable across multiple standards</li>
+      <li>Suitable for LLM context windows</li>
+      <li>Executable and validatable</li>
+    </ul>
+  </section>
+</div>

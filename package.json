@@ -1,0 +1,21 @@
+{
+  "name": "konomi-standard-pages",
+  "version": "1.0.0",
+  "description": "Konomi Standard - GitHub Pages Static Reference",
+  "scripts": {
+    "dev": "eleventy --serve",
+    "build": "npm run css && npm run eleventy",
+    "eleventy": "eleventy",
+    "css": "tailwindcss -i src/assets/css/main.css -o dist/css/main.css --minify",
+    "parse": "node scripts/parse-standard.js"
+  },
+  "devDependencies": {
+    "@11ty/eleventy": "^2.0.1",
+    "tailwindcss": "^3.4.0",
+    "lunr": "^2.3.9"
+  },
+  "dependencies": {
+    "alpinejs": "^3.13.0",
+    "mermaid": "^10.0.0"
+  }
+}

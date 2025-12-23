@@ -1,0 +1,63 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer components {
+  .udt-card {
+    @apply bg-konomi-surface rounded-lg p-4 border border-konomi-primary/30 hover:border-konomi-accent/50 transition cursor-pointer;
+  }
+
+  .udt-field {
+    @apply font-mono text-sm text-konomi-muted;
+  }
+
+  .udt-type {
+    @apply text-konomi-accent font-semibold;
+  }
+
+  .udt-name {
+    @apply text-konomi-text font-bold text-lg;
+  }
+
+  .std-badge {
+    @apply px-2 py-1 rounded text-xs font-mono bg-konomi-primary/50 text-konomi-text;
+  }
+
+  .copy-btn {
+    @apply text-konomi-muted hover:text-konomi-accent cursor-pointer transition;
+  }
+
+  .nav-item {
+    @apply block py-1 px-2 rounded hover:bg-konomi-primary/30 text-konomi-muted hover:text-konomi-text transition;
+  }
+
+  .nav-active {
+    @apply bg-konomi-primary/50 text-konomi-text;
+  }
+
+  .search-input {
+    @apply w-full bg-konomi-surface border border-konomi-primary/50 rounded px-3 py-2 text-konomi-text focus:border-konomi-accent outline-none;
+  }
+
+  .section-heading {
+    @apply text-2xl font-bold text-konomi-text mb-4 mt-8 first:mt-0;
+  }
+
+  .subsection-heading {
+    @apply text-xl font-semibold text-konomi-text mb-3 mt-6;
+  }
+}
+
+@layer base {
+  body {
+    @apply font-sans;
+  }
+
+  code {
+    @apply font-mono;
+  }
+
+  pre {
+    @apply bg-konomi-surface p-4 rounded overflow-x-auto border border-konomi-primary/30;
+  }
+}

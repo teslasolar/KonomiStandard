@@ -1,0 +1,58 @@
+[
+  {
+    "id": "ISA-95",
+    "name": "ISA-95",
+    "scope": "Enterprise to Control Integration",
+    "layer": 2,
+    "description": "Integration between business and manufacturing systems"
+  },
+  {
+    "id": "ISA-88",
+    "name": "ISA-88",
+    "scope": "Batch Process Control",
+    "layer": 3,
+    "description": "Batch control models and procedures"
+  },
+  {
+    "id": "ISA-101",
+    "name": "ISA-101",
+    "scope": "Human Machine Interface Design",
+    "layer": 4,
+    "description": "HMI design principles and best practices"
+  },
+  {
+    "id": "ISA-18.2",
+    "name": "ISA-18.2",
+    "scope": "Alarm Management Lifecycle",
+    "layer": 5,
+    "description": "Alarm rationalization and management"
+  },
+  {
+    "id": "OPC-UA",
+    "name": "OPC-UA",
+    "scope": "Industrial Communication",
+    "layer": 6,
+    "description": "Unified architecture for industrial interoperability"
+  },
+  {
+    "id": "MQTT-Sparkplug",
+    "name": "MQTT Sparkplug",
+    "scope": "Lightweight Messaging",
+    "layer": 7,
+    "description": "MQTT-based pub/sub for industrial IoT"
+  },
+  {
+    "id": "Modbus",
+    "name": "Modbus",
+    "scope": "Field Protocol",
+    "layer": 8,
+    "description": "Simple field device communication"
+  },
+  {
+    "id": "KPI",
+    "name": "KPI Metrics",
+    "scope": "Performance Metrics",
+    "layer": 9,
+    "description": "Operational performance indicators"
+  }
+]

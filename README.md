@@ -1,159 +1,204 @@
-# KonomiStandard
+# 📐 Konomi Standard Pages
 
-Automated polling repository with scheduled updates every 30 minutes using GitHub Actions (100% free).
+Static reference site for the Konomi Standard - a self-defining industrial standards compression format. Built with Eleventy, Tailwind CSS, and deployed to GitHub Pages.
 
 ## 🚀 Features
 
-- **Automated Polling**: Runs every 30 minutes via GitHub Actions
-- **Zero Cost**: Uses GitHub's free tier (2,000 minutes/month for private repos, unlimited for public)
-- **Manual Trigger**: Can be triggered manually from GitHub Actions UI
-- **Auto-commit**: Automatically commits and pushes changes
-- **Extensible**: Easy to customize for your specific polling needs
+- **Browse Standards**: Navigate through ISA-95, ISA-88, ISA-101, ISA-18.2, OPC-UA, MQTT Sparkplug, Modbus, and KPI standards
+- **UDT Explorer**: View and copy User Defined Types as JSON
+- **State Diagrams**: Visualize state machines with Mermaid
+- **Search**: Fast client-side search across all standards and UDTs
+- **Crosswalks**: View mappings between different standards
+- **Dark Mode**: Beautiful dark theme optimized for readability
+- **Copy to Clipboard**: One-click copy for UDT definitions
+- **Zero JS Frameworks**: Lightweight, fast, and cacheable static site
 
 ## 📁 Repository Structure
 
 ```
-.
-├── .github/workflows/
-│   └── scheduled-poll.yml    # GitHub Actions workflow
+konomi-standard-pages/
+├── .github/
+│   └── workflows/
+│       └── deploy.yml          # GitHub Pages deployment
+├── src/
+│   ├── _data/                  # Generated JSON data
+│   │   ├── standards.json
+│   │   ├── base_udts.json
+│   │   ├── crosswalks.json
+│   │   └── nav.json
+│   ├── _includes/              # Reusable templates
+│   │   ├── base.njk
+│   │   └── sidebar.njk
+│   ├── _layouts/               # Page layouts
+│   ├── standards/              # Standard detail pages
+│   │   ├── isa-95.njk
+│   │   └── isa-88.njk
+│   ├── udts/                   # UDT detail pages
+│   ├── assets/
+│   │   ├── css/
+│   │   │   └── main.css        # Tailwind styles
+│   │   └── js/
+│   │       ├── search.js
+│   │       ├── copy.js
+│   │       └── theme.js
+│   ├── index.njk               # Home page
+│   └── about.njk               # About page
 ├── scripts/
-│   └── poll.py              # Main polling script
-├── data/                    # Generated data files (auto-created)
-├── requirements.txt         # Python dependencies
+│   └── parse-standard.js       # Parser for KONOMI_STANDARD.md
+├── .eleventy.js                # Eleventy configuration
+├── tailwind.config.js          # Tailwind configuration
+├── package.json
 └── README.md
 ```
 
 ## ⚙️ Setup
 
-### 1. Enable GitHub Actions
+### 1. Clone and Install
 
-1. Go to your repository settings
-2. Navigate to **Actions** → **General**
-3. Ensure "Allow all actions and reusable workflows" is enabled
-4. Save changes
-
-### 2. Grant Workflow Permissions
-
-1. Go to **Settings** → **Actions** → **General**
-2. Scroll to "Workflow permissions"
-3. Select "Read and write permissions"
-4. Check "Allow GitHub Actions to create and approve pull requests"
-5. Save changes
-
-### 3. Customize the Polling Script
-
-Edit [`scripts/poll.py`](scripts/poll.py) to add your custom logic:
-
-```python
-def poll_data():
-    # Add your polling logic here
-    # Examples:
-    # - Fetch data from APIs
-    # - Check RSS feeds
-    # - Monitor websites
-    # - Collect metrics
-    pass
-```
-
-### 4. Add Dependencies (if needed)
-
-Update [`requirements.txt`](requirements.txt) with any Python packages you need:
-
-```txt
-requests>=2.31.0
-pandas>=2.0.0
-beautifulsoup4>=4.12.0
-```
-
-### 5. Configure Secrets (optional)
-
-For API keys or sensitive data:
-
-1. Go to **Settings** → **Secrets and variables** → **Actions**
-2. Click "New repository secret"
-3. Add your secrets
-4. Reference them in the workflow using `${{ secrets.YOUR_SECRET_NAME }}`
-
-## 🔄 Polling Schedule
-
-The workflow runs every 30 minutes using a cron schedule:
-```yaml
-schedule:
-  - cron: '*/30 * * * *'
-```
-
-### Adjust Polling Frequency
-
-Edit [`.github/workflows/scheduled-poll.yml`](.github/workflows/scheduled-poll.yml):
-
-- Every 15 minutes: `*/15 * * * *`
-- Every hour: `0 * * * *`
-- Every 6 hours: `0 */6 * * *`
-- Daily at midnight: `0 0 * * *`
-
-**Note**: GitHub Actions has a ~3-5 minute delay for scheduled workflows.
-
-## 🧪 Manual Testing
-
-Test the workflow manually:
-
-1. Go to **Actions** tab in GitHub
-2. Select "Scheduled Poll" workflow
-3. Click "Run workflow" button
-4. Monitor the execution
-
-Or test locally:
 ```bash
-python scripts/poll.py
+git clone https://github.com/teslasolar/KonomiStandard.git
+cd KonomiStandard
+npm install
 ```
 
-## 💰 Cost Analysis
+### 2. Development
 
-### GitHub Actions (Free Tier)
-- **Public repos**: Unlimited minutes ✅
-- **Private repos**: 2,000 minutes/month
-- **Usage**: ~1 minute per run = 1,440 minutes/month (30-min intervals)
+```bash
+# Run parser to generate data
+npm run parse
 
-**Verdict**: ✅ **FREE** for public repos, fits within free tier for private repos!
+# Build CSS
+npm run css
 
-### Alternative Free Options
+# Start development server
+npm run dev
+# Visit http://localhost:8080
+```
 
-If you need more than 2,000 minutes/month:
+### 3. Build for Production
 
-1. **GitHub Pages + Cloudflare Workers** (unlimited)
-2. **Vercel Cron Jobs** (100,000 invocations/day)
-3. **Railway Cron** (500 hours/month free)
-4. **Render Cron Jobs** (750 hours/month free)
+```bash
+# Build the site
+npm run build
 
-## 📊 Monitoring
+# Output will be in dist/
+```
 
-View workflow runs:
-- **Actions tab**: See all execution history
-- **Commit history**: Auto-commits show when updates occurred
-- **Workflow badges**: Add status badge to README
+### 4. Deploy to GitHub Pages
 
-### Add Status Badge
+The site auto-deploys when you push to `main`:
 
-```markdown
-![Scheduled Poll](https://github.com/teslasolar/KonomiStandard/actions/workflows/scheduled-poll.yml/badge.svg)
+1. Enable GitHub Pages in repository settings
+2. Set source to "GitHub Actions"
+3. Push to main branch
+4. Site will deploy automatically
+
+Manual deployment:
+```bash
+git add .
+git commit -m "Update site"
+git push origin main
+```
+
+## 🎨 Tech Stack
+
+- **[Eleventy](https://www.11ty.dev/)**: Static site generator
+- **[Tailwind CSS](https://tailwindcss.com/)**: Utility-first CSS framework
+- **[Alpine.js](https://alpinejs.dev/)**: Minimal JavaScript framework for interactivity
+- **[Mermaid](https://mermaid.js.org/)**: Diagram and flowchart rendering
+- **[Lunr.js](https://lunrjs.com/)**: Client-side search (planned)
+- **GitHub Pages**: Free hosting
+
+## 📊 Site Structure
+
+### Layer Architecture
+
+- **Layer 0**: Meta-standard (how standards are defined)
+- **Layer 1**: Base UDTs (Identifier, Timestamp, Quality, Value, etc.)
+- **Layer 2**: ISA-95 (Enterprise-Control Integration)
+- **Layer 3**: ISA-88 (Batch Control)
+- **Layer 4**: ISA-101 (HMI Design)
+- **Layer 5**: ISA-18.2 (Alarm Management)
+- **Layer 6**: OPC-UA (Communication)
+- **Layer 7**: MQTT/Sparkplug (Messaging)
+- **Layer 8**: Modbus (Field Protocol)
+- **Layer 9**: KPIs (Performance Metrics)
+
+### Crosswalks
+
+Mappings between standards:
+- ISA-95 ↔ ISA-88
+- ISA-95 ↔ OPC-UA
+- ISA-88 ↔ PackML
+- ISA-101 ↔ ISA-18.2
+- OPC-UA ↔ Sparkplug
+
+## 🎯 Available Commands
+
+```bash
+npm run dev         # Start development server (localhost:8080)
+npm run build       # Build production site
+npm run css         # Compile Tailwind CSS
+npm run parse       # Parse KONOMI_STANDARD.md to JSON
+```
+
+## 🧪 Customization
+
+### Adding a New Standard
+
+1. Add standard to `scripts/parse-standard.js`
+2. Create page in `src/standards/[standard-name].njk`
+3. Run `npm run parse` to regenerate data
+4. Build and deploy
+
+### Adding UDT Pages
+
+1. Create `src/udts/[udt-name].njk`
+2. Follow the template pattern from existing UDT pages
+3. Include UDT fields, examples, and usage
+
+### Modifying Theme
+
+Edit `tailwind.config.js` to customize colors:
+
+```javascript
+colors: {
+  konomi: {
+    bg: '#1a1a2e',        // Background
+    surface: '#16213e',   // Card background
+    primary: '#0f3460',   // Primary accent
+    accent: '#e94560',    // Highlight color
+    text: '#eaeaea',      // Text color
+    muted: '#8892b0'      // Muted text
+  }
+}
 ```
 
 ## 🛠️ Troubleshooting
 
-### Workflow not running?
-- Check if Actions are enabled in repository settings
-- Verify workflow permissions (read + write)
-- Ensure cron syntax is correct
+### Build Errors
 
-### No commits being created?
-- Check if the polling script generates file changes
-- Review workflow logs in Actions tab
-- Verify git config is correct
+```bash
+# Clear cache and rebuild
+rm -rf dist .cache node_modules
+npm install
+npm run build
+```
 
-### Rate limits?
-- Add delays between API calls
-- Use GitHub's `GITHUB_TOKEN` for GitHub API calls
-- Cache data when possible
+### CSS Not Updating
+
+```bash
+# Force rebuild CSS
+npm run css
+```
+
+### Development Server Issues
+
+```bash
+# Kill process and restart
+pkill -f eleventy
+npm run dev
+```
 
 ## 📝 License
 

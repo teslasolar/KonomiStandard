@@ -1,0 +1,35 @@
+{
+  "name": "gitplc",
+  "version": "1.0.0",
+  "description": "Universal PLC namespace and UDT transfer layer - Cross-vendor PLC program conversion via Git",
+  "type": "module",
+  "main": "src/index.js",
+  "bin": {
+    "gitplc": "./cli/gitplc.js"
+  },
+  "scripts": {
+    "test": "node --test",
+    "cli": "node cli/gitplc.js"
+  },
+  "keywords": [
+    "plc",
+    "automation",
+    "isa-88",
+    "udt",
+    "rockwell",
+    "siemens",
+    "codesys",
+    "beckhoff"
+  ],
+  "author": "Konomi Standard",
+  "license": "MIT",
+  "dependencies": {
+    "js-yaml": "^4.1.0",
+    "commander": "^11.1.0",
+    "simple-git": "^3.22.0",
+    "chalk": "^5.3.0"
+  },
+  "devDependencies": {
+    "node:test": "*"
+  }
+}

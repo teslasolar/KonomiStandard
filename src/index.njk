@@ -1,0 +1,57 @@
+---
+layout: base.njk
+title: Home
+---
+
+<h1 class="text-3xl font-bold mb-6">📐 Konomi Standard</h1>
+<p class="text-konomi-muted mb-8">Self-defining industrial standards compression format</p>
+
+<div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8">
+  {% for std in standards %}
+  <a href="/standards/{{ std.id | slug }}" class="udt-card">
+    <div class="udt-name">{{ std.name }}</div>
+    <div class="text-konomi-muted text-sm mt-2">{{ std.scope }}</div>
+    <div class="text-konomi-accent text-xs mt-2">Layer {{ std.layer }}</div>
+  </a>
+  {% endfor %}
+</div>
+
+<h2 class="section-heading">Layer 0: Meta-Standard</h2>
+<p class="text-konomi-muted mb-4">Defines how all standards are structured:</p>
+
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+  {% for udt in base_udts %}
+  <a href="/udts/{{ udt | slug }}" class="udt-card">
+    <div class="udt-name text-base">{{ udt }}</div>
+    <div class="text-konomi-muted text-xs mt-1">Base UDT</div>
+  </a>
+  {% endfor %}
+</div>
+
+<h2 class="section-heading">Features</h2>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-3 text-sm">
+  <div class="flex items-center text-konomi-text">
+    <span class="text-konomi-accent mr-2">☑</span> Browse standards by layer
+  </div>
+  <div class="flex items-center text-konomi-text">
+    <span class="text-konomi-accent mr-2">☑</span> View UDT details + fields
+  </div>
+  <div class="flex items-center text-konomi-text">
+    <span class="text-konomi-accent mr-2">☑</span> Copy UDT as JSON
+  </div>
+  <div class="flex items-center text-konomi-text">
+    <span class="text-konomi-accent mr-2">☑</span> Mermaid state diagrams
+  </div>
+  <div class="flex items-center text-konomi-text">
+    <span class="text-konomi-accent mr-2">☑</span> Search across all UDTs
+  </div>
+  <div class="flex items-center text-konomi-text">
+    <span class="text-konomi-accent mr-2">☑</span> Crosswalk tables
+  </div>
+  <div class="flex items-center text-konomi-text">
+    <span class="text-konomi-accent mr-2">☑</span> Dark mode default
+  </div>
+  <div class="flex items-center text-konomi-text">
+    <span class="text-konomi-accent mr-2">☑</span> Static, fast, cacheable
+  </div>
+</div>

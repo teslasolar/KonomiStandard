@@ -1,0 +1,81 @@
+---
+layout: base.njk
+title: Identifier UDT
+---
+
+<div class="mb-6">
+  <span class="std-badge">Layer 1</span>
+  <h1 class="text-3xl font-bold mt-2">Identifier</h1>
+  <p class="text-konomi-muted">Base UDT for identification primitives</p>
+</div>
+
+<h2 class="section-heading">Types</h2>
+
+<div class="space-y-4">
+  <div class="udt-card">
+    <div class="flex justify-between items-start mb-2">
+      <h3 class="udt-name">UUID</h3>
+      <button class="copy-btn" data-copy='{"type":"UUID","format":"xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx","example":"550e8400-e29b-41d4-a716-446655440000"}'>📋</button>
+    </div>
+    <div class="space-y-1">
+      <div class="udt-field"><span class="text-konomi-text">type</span>:<span class="udt-type">str</span></div>
+      <div class="udt-field"><span class="text-konomi-text">scope</span>:<span class="udt-type">global</span></div>
+      <div class="udt-field"><span class="text-konomi-text">format</span>:<span class="udt-type">"xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"</span></div>
+      <div class="udt-field"><span class="text-konomi-text">example</span>:<span class="udt-type">"550e8400-e29b-41d4-a716-446655440000"</span></div>
+    </div>
+  </div>
+
+  <div class="udt-card">
+    <div class="flex justify-between items-start mb-2">
+      <h3 class="udt-name">PATH</h3>
+      <button class="copy-btn" data-copy='{"type":"PATH","format":"A/B/C/D","example":"Site1/Area2/Line3/Unit4"}'>📋</button>
+    </div>
+    <div class="space-y-1">
+      <div class="udt-field"><span class="text-konomi-text">type</span>:<span class="udt-type">str</span></div>
+      <div class="udt-field"><span class="text-konomi-text">scope</span>:<span class="udt-type">hierarchical</span></div>
+      <div class="udt-field"><span class="text-konomi-text">format</span>:<span class="udt-type">"A/B/C/D"</span></div>
+      <div class="udt-field"><span class="text-konomi-text">example</span>:<span class="udt-type">"Site1/Area2/Line3/Unit4"</span></div>
+    </div>
+  </div>
+
+  <div class="udt-card">
+    <div class="flex justify-between items-start mb-2">
+      <h3 class="udt-name">TAG</h3>
+      <button class="copy-btn" data-copy='{"type":"TAG","format":"Area_Unit_Module_Point","example":"Pkg_Filler_Tank1_Level"}'>📋</button>
+    </div>
+    <div class="space-y-1">
+      <div class="udt-field"><span class="text-konomi-text">type</span>:<span class="udt-type">str</span></div>
+      <div class="udt-field"><span class="text-konomi-text">scope</span>:<span class="udt-type">equipment</span></div>
+      <div class="udt-field"><span class="text-konomi-text">format</span>:<span class="udt-type">"Area_Unit_Module_Point"</span></div>
+      <div class="udt-field"><span class="text-konomi-text">example</span>:<span class="udt-type">"Pkg_Filler_Tank1_Level"</span></div>
+    </div>
+  </div>
+
+  <div class="udt-card">
+    <div class="flex justify-between items-start mb-2">
+      <h3 class="udt-name">URN</h3>
+      <button class="copy-btn" data-copy='{"type":"URN","format":"urn:domain:type:id","example":"urn:acme:batch:12345"}'>📋</button>
+    </div>
+    <div class="space-y-1">
+      <div class="udt-field"><span class="text-konomi-text">type</span>:<span class="udt-type">str</span></div>
+      <div class="udt-field"><span class="text-konomi-text">scope</span>:<span class="udt-type">global</span></div>
+      <div class="udt-field"><span class="text-konomi-text">format</span>:<span class="udt-type">"urn:domain:type:id"</span></div>
+      <div class="udt-field"><span class="text-konomi-text">example</span>:<span class="udt-type">"urn:acme:batch:12345"</span></div>
+    </div>
+  </div>
+</div>
+
+<h2 class="section-heading">Usage</h2>
+<div class="bg-konomi-surface p-4 rounded border border-konomi-primary/30">
+  <pre class="text-konomi-text text-sm"><code>// UUID for globally unique resources
+equipment_id: "550e8400-e29b-41d4-a716-446655440000"
+
+// PATH for hierarchical navigation
+asset_path: "Enterprise/Site1/Area2/Line3/Unit4"
+
+// TAG for equipment points
+tag_name: "Pkg_Filler_Tank1_Level"
+
+// URN for namespaced resources
+batch_urn: "urn:acme:batch:12345"</code></pre>
+</div>

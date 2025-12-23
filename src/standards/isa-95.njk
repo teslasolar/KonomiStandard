@@ -1,0 +1,113 @@
+---
+layout: base.njk
+title: ISA-95
+---
+
+<div class="mb-6">
+  <span class="std-badge">ISA-95</span>
+  <h1 class="text-3xl font-bold mt-2">ISA-95: Enterprise-Control Integration</h1>
+  <p class="text-konomi-muted">Integration between business and manufacturing systems</p>
+</div>
+
+<h2 class="section-heading">Purdue Model Hierarchy</h2>
+<div class="space-y-3 mb-8">
+  <div class="udt-card">
+    <div class="font-bold text-konomi-text">Level 4: Business Planning & Logistics</div>
+    <div class="text-sm text-konomi-muted mt-1">Timescale: Days to months</div>
+    <div class="text-sm text-konomi-muted">Systems: ERP, BI</div>
+  </div>
+  <div class="udt-card">
+    <div class="font-bold text-konomi-text">Level 3: Manufacturing Operations Management</div>
+    <div class="text-sm text-konomi-muted mt-1">Timescale: Shifts to days</div>
+    <div class="text-sm text-konomi-muted">Systems: MES, LIMS, WMS</div>
+  </div>
+  <div class="udt-card">
+    <div class="font-bold text-konomi-text">Level 2: Supervisory Control</div>
+    <div class="text-sm text-konomi-muted mt-1">Timescale: Seconds to hours</div>
+    <div class="text-sm text-konomi-muted">Systems: SCADA, HMI, Batch</div>
+  </div>
+  <div class="udt-card">
+    <div class="font-bold text-konomi-text">Level 1: Direct Control</div>
+    <div class="text-sm text-konomi-muted mt-1">Timescale: Milliseconds to seconds</div>
+    <div class="text-sm text-konomi-muted">Systems: PLC, DCS, RTU</div>
+  </div>
+  <div class="udt-card">
+    <div class="font-bold text-konomi-text">Level 0: Physical Process</div>
+    <div class="text-sm text-konomi-muted mt-1">Timescale: Continuous</div>
+    <div class="text-sm text-konomi-muted">Systems: Sensors, Actuators</div>
+  </div>
+</div>
+
+<h2 class="section-heading">Equipment Hierarchy</h2>
+<div class="bg-konomi-surface p-4 rounded border border-konomi-primary/30 font-mono text-sm mb-8">
+  <div class="text-konomi-text">Enterprise</div>
+  <div class="ml-4 text-konomi-muted">└─ Site (1:N)</div>
+  <div class="ml-8 text-konomi-muted">└─ Area (1:N)</div>
+  <div class="ml-12 text-konomi-muted">└─ Work Center (1:N)</div>
+  <div class="ml-16 text-konomi-muted">└─ Work Unit (1:N)</div>
+  <div class="ml-20 text-konomi-muted">└─ Equipment (1:N)</div>
+</div>
+
+<h2 class="section-heading">Key UDTs</h2>
+<div class="space-y-4">
+  <div class="udt-card">
+    <div class="flex justify-between items-start mb-2">
+      <h3 class="udt-name">PhysicalAsset</h3>
+      <button class="copy-btn" data-copy='{"name":"PhysicalAsset","fields":["id:UUID","path:PATH","name:str","level:L0-L4"]}'>📋</button>
+    </div>
+    <div class="space-y-1">
+      <div class="udt-field"><span class="text-konomi-text">id</span>:<span class="udt-type">UUID</span></div>
+      <div class="udt-field"><span class="text-konomi-text">path</span>:<span class="udt-type">PATH</span></div>
+      <div class="udt-field"><span class="text-konomi-text">name</span>:<span class="udt-type">str</span></div>
+      <div class="udt-field"><span class="text-konomi-text">level</span>:<span class="udt-type">L0-L4</span></div>
+      <div class="udt-field"><span class="text-konomi-text">parent</span>:<span class="udt-type">ref</span></div>
+      <div class="udt-field"><span class="text-konomi-text">children</span>:<span class="udt-type">[ref]</span></div>
+    </div>
+  </div>
+
+  <div class="udt-card">
+    <div class="flex justify-between items-start mb-2">
+      <h3 class="udt-name">Equipment</h3>
+      <button class="copy-btn" data-copy='{"name":"Equipment","extends":"PhysicalAsset","fields":["capability:[str]","state:EquipmentState","mode:EquipmentMode"]}'>📋</button>
+    </div>
+    <div class="text-sm text-konomi-muted mb-2">extends PhysicalAsset</div>
+    <div class="space-y-1">
+      <div class="udt-field"><span class="text-konomi-text">capability</span>:<span class="udt-type">[str]</span></div>
+      <div class="udt-field"><span class="text-konomi-text">state</span>:<span class="udt-type">EquipmentState</span></div>
+      <div class="udt-field"><span class="text-konomi-text">mode</span>:<span class="udt-type">EquipmentMode</span></div>
+    </div>
+  </div>
+
+  <div class="udt-card">
+    <div class="flex justify-between items-start mb-2">
+      <h3 class="udt-name">Material</h3>
+      <button class="copy-btn" data-copy='{"name":"Material","fields":["id:UUID","name:str","lot:str","sublots:[ref]"]}'>📋</button>
+    </div>
+    <div class="space-y-1">
+      <div class="udt-field"><span class="text-konomi-text">id</span>:<span class="udt-type">UUID</span></div>
+      <div class="udt-field"><span class="text-konomi-text">name</span>:<span class="udt-type">str</span></div>
+      <div class="udt-field"><span class="text-konomi-text">lot</span>:<span class="udt-type">str|null</span></div>
+      <div class="udt-field"><span class="text-konomi-text">sublots</span>:<span class="udt-type">[ref]</span></div>
+    </div>
+  </div>
+</div>
+
+<h2 class="section-heading">Data Flows</h2>
+<div class="space-y-2 text-sm">
+  <div class="udt-field">
+    <span class="text-konomi-accent">L4→L3:</span>
+    <span class="text-konomi-text">Schedule, MaterialDef, ProductDef, WorkOrder</span>
+  </div>
+  <div class="udt-field">
+    <span class="text-konomi-accent">L3→L4:</span>
+    <span class="text-konomi-text">Performance, Inventory, Quality, Status</span>
+  </div>
+  <div class="udt-field">
+    <span class="text-konomi-accent">L3→L2:</span>
+    <span class="text-konomi-text">Recipe, Setpoints, Commands, Schedule</span>
+  </div>
+  <div class="udt-field">
+    <span class="text-konomi-accent">L2→L3:</span>
+    <span class="text-konomi-text">ProcessData, Events, Alarms, Batch</span>
+  </div>
+</div>

@@ -1,0 +1,27 @@
+[
+  {
+    "id": "isa95-isa88",
+    "from": "ISA-95",
+    "to": "ISA-88"
+  },
+  {
+    "id": "isa95-opcua",
+    "from": "ISA-95",
+    "to": "OPC-UA"
+  },
+  {
+    "id": "isa88-packml",
+    "from": "ISA-88",
+    "to": "PackML"
+  },
+  {
+    "id": "isa101-isa182",
+    "from": "ISA-101",
+    "to": "ISA-18.2"
+  },
+  {
+    "id": "opcua-sparkplug",
+    "from": "OPC-UA",
+    "to": "Sparkplug"
+  }
+]

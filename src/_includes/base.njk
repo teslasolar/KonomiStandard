@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en" x-data="{dark:true}" :class="{'dark':dark}">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1.0">
+  <title>{{ title or 'Konomi Standard' }} | Konomi Standard</title>
+  <link rel="stylesheet" href="/css/main.css">
+  <script defer src="https://unpkg.com/alpinejs@3/dist/cdn.min.js"></script>
+  <script src="https://unpkg.com/mermaid@10/dist/mermaid.min.js"></script>
+</head>
+<body class="bg-konomi-bg text-konomi-text min-h-screen">
+  <div class="flex flex-col md:flex-row">
+    <!-- SIDEBAR -->
+    <aside class="w-full md:w-64 md:h-screen md:sticky md:top-0 overflow-y-auto border-b md:border-b-0 md:border-r border-konomi-primary/30 p-4">
+      {% include "sidebar.njk" %}
+    </aside>
+
+    <!-- MAIN CONTENT -->
+    <main class="flex-1 p-8 max-w-4xl mx-auto w-full">
+      {{ content | safe }}
+    </main>
+  </div>
+
+  <script src="/js/search.js"></script>
+  <script src="/js/copy.js"></script>
+  <script src="/js/theme.js"></script>
+  <script>
+    mermaid.initialize({
+      startOnLoad: true,
+      theme: 'dark'
+    });
+  </script>
+</body>
+</html>

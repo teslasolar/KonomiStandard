@@ -1,0 +1,73 @@
+{
+  "standards": [
+    {
+      "id": "ISA-95",
+      "name": "ISA-95"
+    },
+    {
+      "id": "ISA-88",
+      "name": "ISA-88"
+    },
+    {
+      "id": "ISA-101",
+      "name": "ISA-101"
+    },
+    {
+      "id": "ISA-18.2",
+      "name": "ISA-18.2"
+    },
+    {
+      "id": "OPC-UA",
+      "name": "OPC-UA"
+    },
+    {
+      "id": "MQTT-Sparkplug",
+      "name": "MQTT Sparkplug"
+    },
+    {
+      "id": "Modbus",
+      "name": "Modbus"
+    },
+    {
+      "id": "KPI",
+      "name": "KPI Metrics"
+    }
+  ],
+  "base_udts": [
+    "Identifier",
+    "Timestamp",
+    "Quality",
+    "Value",
+    "Range",
+    "Quantity",
+    "Duration",
+    "Status"
+  ],
+  "crosswalks": [
+    {
+      "id": "isa95-isa88",
+      "from": "ISA-95",
+      "to": "ISA-88"
+    },
+    {
+      "id": "isa95-opcua",
+      "from": "ISA-95",
+      "to": "OPC-UA"
+    },
+    {
+      "id": "isa88-packml",
+      "from": "ISA-88",
+      "to": "PackML"
+    },
+    {
+      "id": "isa101-isa182",
+      "from": "ISA-101",
+      "to": "ISA-18.2"
+    },
+    {
+      "id": "opcua-sparkplug",
+      "from": "OPC-UA",
+      "to": "Sparkplug"
+    }
+  ]
+}

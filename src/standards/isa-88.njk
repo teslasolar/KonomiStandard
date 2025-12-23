@@ -1,0 +1,97 @@
+---
+layout: base.njk
+title: ISA-88
+---
+
+<div class="mb-6">
+  <span class="std-badge">ISA-88</span>
+  <h1 class="text-3xl font-bold mt-2">ISA-88: Batch Process Control</h1>
+  <p class="text-konomi-muted">Batch control models and procedures</p>
+</div>
+
+<h2 class="section-heading">Equipment Hierarchy</h2>
+<div class="bg-konomi-surface p-4 rounded border border-konomi-primary/30 font-mono text-sm mb-8">
+  <div class="text-konomi-text">Enterprise</div>
+  <div class="ml-4 text-konomi-muted">└─ Site</div>
+  <div class="ml-8 text-konomi-muted">└─ Area</div>
+  <div class="ml-12 text-konomi-muted">└─ Process Cell</div>
+  <div class="ml-16 text-konomi-muted">└─ Unit</div>
+  <div class="ml-20 text-konomi-muted">└─ Equipment Module</div>
+  <div class="ml-24 text-konomi-muted">└─ Control Module</div>
+</div>
+
+<h2 class="section-heading">Recipe Hierarchy</h2>
+<div class="bg-konomi-surface p-4 rounded border border-konomi-primary/30 font-mono text-sm mb-8">
+  <div class="text-konomi-text">General Recipe (product-independent)</div>
+  <div class="ml-4 text-konomi-muted">└─ Site Recipe (site-specific)</div>
+  <div class="ml-8 text-konomi-muted">└─ Master Recipe (approved version)</div>
+  <div class="ml-12 text-konomi-muted">└─ Control Recipe (equipment-specific)</div>
+</div>
+
+<h2 class="section-heading">PackML State Machine</h2>
+<div class="my-4">
+  <div class="mermaid">
+stateDiagram-v2
+    [*] --> STOPPED
+    STOPPED --> IDLE: Reset
+    IDLE --> STARTING: Start
+    STARTING --> EXECUTE: Complete
+    EXECUTE --> COMPLETING: Complete
+    COMPLETING --> COMPLETE: Done
+    COMPLETE --> RESETTING: Reset
+    RESETTING --> IDLE: Done
+    EXECUTE --> HOLDING: Hold
+    HOLDING --> HELD: Done
+    HELD --> UNHOLDING: Unhold
+    UNHOLDING --> EXECUTE: Done
+    EXECUTE --> STOPPING: Stop
+    STOPPING --> STOPPED: Done
+    EXECUTE --> ABORTING: Abort
+    ABORTING --> ABORTED: Done
+    ABORTED --> CLEARING: Clear
+    CLEARING --> STOPPED: Done
+  </div>
+</div>
+
+<h2 class="section-heading">Key UDTs</h2>
+<div class="space-y-4">
+  <div class="udt-card">
+    <div class="flex justify-between items-start mb-2">
+      <h3 class="udt-name">Batch</h3>
+      <button class="copy-btn" data-copy='{"name":"Batch","fields":["id:UUID","recipe:ref","state:BatchState","start:Timestamp"]}'>📋</button>
+    </div>
+    <div class="space-y-1">
+      <div class="udt-field"><span class="text-konomi-text">id</span>:<span class="udt-type">UUID</span></div>
+      <div class="udt-field"><span class="text-konomi-text">recipe</span>:<span class="udt-type">ref</span></div>
+      <div class="udt-field"><span class="text-konomi-text">state</span>:<span class="udt-type">BatchState</span></div>
+      <div class="udt-field"><span class="text-konomi-text">start</span>:<span class="udt-type">Timestamp</span></div>
+      <div class="udt-field"><span class="text-konomi-text">end</span>:<span class="udt-type">Timestamp|null</span></div>
+    </div>
+  </div>
+
+  <div class="udt-card">
+    <div class="flex justify-between items-start mb-2">
+      <h3 class="udt-name">Recipe</h3>
+      <button class="copy-btn" data-copy='{"name":"Recipe","fields":["id:UUID","name:str","version:str","procedure:Procedure"]}'>📋</button>
+    </div>
+    <div class="space-y-1">
+      <div class="udt-field"><span class="text-konomi-text">id</span>:<span class="udt-type">UUID</span></div>
+      <div class="udt-field"><span class="text-konomi-text">name</span>:<span class="udt-type">str</span></div>
+      <div class="udt-field"><span class="text-konomi-text">version</span>:<span class="udt-type">str</span></div>
+      <div class="udt-field"><span class="text-konomi-text">procedure</span>:<span class="udt-type">Procedure</span></div>
+    </div>
+  </div>
+
+  <div class="udt-card">
+    <div class="flex justify-between items-start mb-2">
+      <h3 class="udt-name">Phase</h3>
+      <button class="copy-btn" data-copy='{"name":"Phase","fields":["id:str","name:str","state:PhaseState","params:[...]"]}'>📋</button>
+    </div>
+    <div class="space-y-1">
+      <div class="udt-field"><span class="text-konomi-text">id</span>:<span class="udt-type">str</span></div>
+      <div class="udt-field"><span class="text-konomi-text">name</span>:<span class="udt-type">str</span></div>
+      <div class="udt-field"><span class="text-konomi-text">state</span>:<span class="udt-type">PhaseState</span></div>
+      <div class="udt-field"><span class="text-konomi-text">params</span>:<span class="udt-type">[{name,type,default,min,max,uom}]</span></div>
+    </div>
+  </div>
+</div>

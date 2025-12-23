@@ -1,0 +1,47 @@
+<div class="mb-6">
+  <a href="/" class="text-xl font-bold text-konomi-accent hover:text-konomi-accent/80 transition">
+    📐 Konomi Std
+  </a>
+</div>
+
+<div class="mb-4" x-data="search()">
+  <input
+    type="text"
+    x-model="q"
+    @input="doSearch"
+    placeholder="Search..."
+    class="search-input"
+  >
+  <div x-show="open && results.length > 0" class="mt-2 bg-konomi-surface border border-konomi-primary/50 rounded max-h-64 overflow-y-auto">
+    <template x-for="result in results" :key="result.id">
+      <a :href="result.url" class="block px-3 py-2 hover:bg-konomi-primary/30 transition">
+        <div class="font-semibold text-konomi-text text-sm" x-text="result.name"></div>
+        <div class="text-xs text-konomi-muted" x-text="result.type"></div>
+      </a>
+    </template>
+  </div>
+</div>
+
+<nav class="space-y-1">
+  <div class="text-konomi-muted text-xs uppercase tracking-wider mb-2">Standards</div>
+  {% for std in nav.standards %}
+  <a href="/standards/{{ std.id | slug }}" class="nav-item">{{ std.name }}</a>
+  {% endfor %}
+
+  <div class="text-konomi-muted text-xs uppercase tracking-wider mb-2 mt-4">Base UDTs</div>
+  {% for udt in nav.base_udts %}
+  <a href="/udts/{{ udt | slug }}" class="nav-item">{{ udt }}</a>
+  {% endfor %}
+
+  <div class="text-konomi-muted text-xs uppercase tracking-wider mb-2 mt-4">Crosswalks</div>
+  {% for xw in nav.crosswalks %}
+  <a href="/crosswalks/{{ xw.id | slug }}" class="nav-item">{{ xw.from }}↔{{ xw.to }}</a>
+  {% endfor %}
+</nav>
+
+<div class="mt-8 pt-4 border-t border-konomi-primary/30">
+  <button @click="dark=!dark" class="text-konomi-muted hover:text-konomi-text text-sm transition">
+    <span x-show="dark">☀️ Light</span>
+    <span x-show="!dark">🌙 Dark</span>
+  </button>
+</div>
