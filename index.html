@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>📐 Konomi Standard</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+      background: #1a1a2e;
+      color: #eaeaea;
+      line-height: 1.6;
+      padding: 2rem;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .container {
+      max-width: 900px;
+      width: 100%;
+    }
+
+    h1 {
+      font-size: 3rem;
+      margin-bottom: 1rem;
+      color: #e94560;
+    }
+
+    .subtitle {
+      font-size: 1.2rem;
+      color: #8892b0;
+      margin-bottom: 3rem;
+    }
+
+    .projects {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 1.5rem;
+      margin-bottom: 3rem;
+    }
+
+    .project-card {
+      background: #16213e;
+      border: 1px solid #0f3460;
+      border-radius: 8px;
+      padding: 1.5rem;
+      transition: all 0.3s ease;
+      text-decoration: none;
+      color: inherit;
+      display: block;
+    }
+
+    .project-card:hover {
+      transform: translateY(-4px);
+      border-color: #e94560;
+      box-shadow: 0 4px 12px rgba(233, 69, 96, 0.2);
+    }
+
+    .project-number {
+      display: inline-block;
+      background: #0f3460;
+      color: #e94560;
+      padding: 0.25rem 0.75rem;
+      border-radius: 4px;
+      font-size: 0.875rem;
+      margin-bottom: 0.75rem;
+    }
+
+    .project-title {
+      font-size: 1.5rem;
+      color: #e94560;
+      margin-bottom: 0.5rem;
+    }
+
+    .project-description {
+      color: #8892b0;
+      font-size: 0.95rem;
+      margin-bottom: 1rem;
+    }
+
+    .project-features {
+      list-style: none;
+      font-size: 0.875rem;
+      color: #eaeaea;
+    }
+
+    .project-features li {
+      padding-left: 1.25rem;
+      position: relative;
+      margin-bottom: 0.25rem;
+    }
+
+    .project-features li:before {
+      content: "→";
+      position: absolute;
+      left: 0;
+      color: #e94560;
+    }
+
+    .footer {
+      text-align: center;
+      color: #8892b0;
+      font-size: 0.875rem;
+      padding-top: 2rem;
+      border-top: 1px solid #0f3460;
+    }
+
+    .footer a {
+      color: #e94560;
+      text-decoration: none;
+    }
+
+    .footer a:hover {
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>📐 Konomi Standard</h1>
+    <p class="subtitle">Self-defining industrial standards compression format with zero-backend P2P collaboration</p>
+
+    <div class="projects">
+      <a href="./src/index.html" class="project-card">
+        <div class="project-number">Project 1</div>
+        <h2 class="project-title">Konomi Standard Pages</h2>
+        <p class="project-description">Static reference site for industrial automation standards</p>
+        <ul class="project-features">
+          <li>ISA-95, ISA-88, ISA-101, ISA-18.2</li>
+          <li>OPC-UA, MQTT Sparkplug, Modbus</li>
+          <li>UDT explorer with search</li>
+          <li>State diagrams & crosswalks</li>
+        </ul>
+      </a>
+
+      <a href="./build-prompts/README.md" class="project-card">
+        <div class="project-number">Project 2</div>
+        <h2 class="project-title">Build Prompts</h2>
+        <p class="project-description">Complete technical specifications and build documentation</p>
+        <ul class="project-features">
+          <li>Layer 0-9 specifications</li>
+          <li>Agent architectures</li>
+          <li>Implementation guides</li>
+          <li>Reference documentation</li>
+        </ul>
+      </a>
+
+      <a href="./konomi-p2p/README.md" class="project-card">
+        <div class="project-number">Project 3</div>
+        <h2 class="project-title">Konomi P2P</h2>
+        <p class="project-description">Turn any static site into a P2P collaborative app</p>
+        <ul class="project-features">
+          <li>Zero backend required</li>
+          <li>WebRTC + libp2p mesh</li>
+          <li>CRDT conflict-free sync</li>
+          <li>One script tag integration</li>
+        </ul>
+      </a>
+
+      <a href="./gitplc/README.md" class="project-card">
+        <div class="project-number">Project 4</div>
+        <h2 class="project-title">GitPLC</h2>
+        <p class="project-description">Universal PLC namespace and UDT transfer layer</p>
+        <ul class="project-features">
+          <li>Cross-vendor conversion</li>
+          <li>Rockwell, Siemens, CODESYS, Beckhoff</li>
+          <li>Git-based versioning</li>
+          <li>PackML state machines</li>
+        </ul>
+      </a>
+    </div>
+
+    <div class="footer">
+      <p>Part of the Konomi Standard ecosystem</p>
+      <p><a href="https://github.com/teslasolar/KonomiStandard">GitHub Repository</a></p>
+    </div>
+  </div>
+</body>
+</html>
