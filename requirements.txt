@@ -1,0 +1,11 @@
+# Python dependencies for polling script
+# Add any additional packages your polling script needs
+
+# For making HTTP requests
+requests>=2.31.0
+
+# For data processing (optional)
+# pandas>=2.0.0
+
+# For environment variable management (optional)
+# python-dotenv>=1.0.0

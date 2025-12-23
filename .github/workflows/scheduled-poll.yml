@@ -1,0 +1,54 @@
+name: Scheduled Poll
+
+on:
+  schedule:
+    # Runs every 30 minutes
+    - cron: '*/30 * * * *'
+  workflow_dispatch:  # Allows manual triggering
+
+jobs:
+  poll-and-update:
+    runs-on: ubuntu-latest
+    
+    permissions:
+      contents: write  # Required for committing changes
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: 'pip'
+      
+      - name: Install dependencies
+        run: |
+          if [ -f requirements.txt ]; then
+            pip install -r requirements.txt
+          fi
+      
+      - name: Run polling script
+        run: python scripts/poll.py
+        env:
+          # Add any required environment variables here
+          # Use GitHub Secrets for sensitive data
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      
+      - name: Commit and push changes
+        run: |
+          git config --local user.email "github-actions[bot]@users.noreply.github.com"
+          git config --local user.name "github-actions[bot]"
+          
+          # Check if there are changes to commit
+          if [ -n "$(git status --porcelain)" ]; then
+            git add .
+            git commit -m "Auto-update: Scheduled poll on $(date -u +'%Y-%m-%d %H:%M:%S UTC')"
+            git push
+            echo "Changes committed and pushed"
+          else
+            echo "No changes to commit"
+          fi
