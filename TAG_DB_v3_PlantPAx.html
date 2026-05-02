@@ -1,0 +1,2278 @@
+<!DOCTYPE html><html><head><meta charset="utf-8"><title>🔥 TAG.DB v2 · Gateway · PLC · Script Console</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@300;400;600;700&display=swap');
+:root{--bg:#060810;--card:#0b0e16;--s2:#10141e;--b:#1a2030;--t:#98a8c0;--t2:#3e4e64;--ig:#38b5f9;--ign:#f57c20;--ok:#42e898;--er:#ff4466;--wr:#f0a030;--lav:#a080ff;--teal:#38d8b8;--gold:#ffd050;--wh:#e8f0ff}
+*{margin:0;box-sizing:border-box;font-family:'IBM Plex Mono',monospace}
+body{background:var(--bg);color:var(--t);height:100vh;overflow:hidden;
+display:grid;grid-template:'H H H'26px 'L C R'1fr 'B B B'28px/205px 1fr 215px;gap:1px}
+.H{grid-area:H;background:var(--card);border-bottom:1px solid var(--b);display:flex;align-items:center;padding:0 8px;gap:5px;font-size:7px}
+.L{grid-area:L;background:var(--card);border-right:1px solid var(--b);overflow-y:auto;font-size:7px}
+.C{grid-area:C;background:var(--bg);display:flex;flex-direction:column;overflow:hidden}
+.R{grid-area:R;background:var(--card);border-left:1px solid var(--b);overflow-y:auto;font-size:7px}
+.B{grid-area:B;background:#040608;border-top:1px solid var(--b);display:flex;align-items:center;padding:0 6px;gap:4px;font-size:7px}
+.ph{font-size:6px;padding:2px 6px;color:var(--ig);letter-spacing:1.5px;font-weight:600;background:rgba(56,181,249,.03);border-bottom:1px solid var(--b)}
+.pb{padding:3px 6px}
+.k{color:var(--ig)}.v{color:var(--ok)}.e{color:var(--er)}.w{color:var(--wr)}.d{color:var(--t2)}.o{color:var(--ign)}.g{color:var(--gold)}.lv{color:var(--lav)}
+.tn{padding:0}.tn>.tl{display:flex;align-items:center;gap:2px;padding:1px 3px;border-radius:2px;font-size:6.5px;cursor:pointer}
+.tn>.tl:hover{background:rgba(56,181,249,.04)}.tn>.tl.sel{background:rgba(56,181,249,.08);color:var(--wh)}
+.tn>.tc{padding-left:10px;display:none}.tn.open>.tc{display:block}
+.tn>.tl .arr{width:7px;text-align:center;color:var(--t2);font-size:5px}
+#chatArea{flex:1;overflow-y:auto;padding:6px;display:flex;flex-direction:column;gap:5px}
+.msg{max-width:90%;padding:5px 8px;border-radius:5px;font-size:9px;line-height:1.5}
+.msg.user{align-self:flex-end;background:rgba(56,181,249,.08);border:1px solid rgba(56,181,249,.12);color:var(--wh)}
+.msg.bot{align-self:flex-start;background:var(--card);border:1px solid var(--b);color:var(--t)}
+.msg.sys{align-self:center;color:var(--t2);font-size:7px;font-style:italic;max-width:95%}
+.msg.tool{align-self:flex-start;background:rgba(245,124,32,.03);border:1px solid rgba(245,124,32,.12);color:var(--ign);font-size:7px}
+.msg pre{background:rgba(0,0,0,.3);padding:3px 5px;border-radius:2px;margin:2px 0;font-size:7px;overflow-x:auto;white-space:pre-wrap}
+#inputArea{padding:4px 6px;border-top:1px solid var(--b);display:flex;gap:3px}
+#chatIn{flex:1;background:var(--card);border:1px solid var(--b);color:var(--t);font-size:9px;padding:4px 6px;border-radius:3px;resize:none;height:28px}
+#chatIn:focus{outline:none;border-color:var(--ig)}
+.sBtn{background:rgba(56,181,249,.1);border:1px solid rgba(56,181,249,.2);color:var(--ig);padding:4px 10px;border-radius:3px;cursor:pointer;font-size:8px;font-weight:600}
+.bt{background:var(--s2);border:1px solid var(--b);color:var(--t2);font-size:6.5px;padding:1px 7px;cursor:pointer;border-radius:2px}
+.bt:hover{border-color:var(--ig);color:var(--ig)}.bt.go{color:var(--ok);border-color:var(--ok)}.bt.on{color:var(--er);border-color:var(--er)}
+.prop{display:grid;grid-template-columns:50px 1fr;gap:1px;padding:1px 6px;font-size:6.5px;border-bottom:1px solid rgba(26,32,48,.3)}
+.prop .pk{color:var(--ig)}.prop .pv{color:var(--ok);word-break:break-all}
+.gw{padding:3px 6px;border:1px solid var(--b);border-radius:3px;margin:2px 0;font-size:6.5px;cursor:pointer;transition:.12s}
+.gw:hover{border-color:var(--ig)}.gw.ok{border-color:var(--ok)}.gw.err{border-color:var(--er)}.gw.pen{border-color:var(--wr)}
+textarea.sql{width:100%;height:24px;background:var(--s2);border:1px solid var(--b);color:var(--ok);font-size:6.5px;padding:2px 4px;border-radius:2px;resize:none;font-family:inherit}
+.tab{display:inline-block;padding:2px 8px;font-size:6.5px;cursor:pointer;border-bottom:2px solid transparent;color:var(--t2)}
+.tab.on{color:var(--ig);border-bottom-color:var(--ig)}
+</style></head><body>
+<div class="H">
+<span style="color:var(--ign);font-weight:700;letter-spacing:1px;font-size:8px">🔥 TAG.DB v2</span>
+<span style="color:var(--b)">│</span>
+<span class="d">Gateway · PLC · Script Console · MCP · PlantPAX</span>
+<span style="flex:1"></span>
+<span class="w" id="llmSt">NO MODEL</span>
+<span style="color:var(--b)">│</span>
+<span class="d" id="dbSt">DB:init</span>
+<span style="color:var(--b)">│</span>
+<span class="d" id="tagCt">0</span>
+<span style="color:var(--b)">│</span>
+<span id="gwSt" class="d">no gw</span>
+</div>
+
+<div class="L">
+<div class="ph">🌐 GATEWAYS</div>
+<div class="pb" id="gwList">
+<div style="margin-bottom:3px"><input id="gwUrl" placeholder="https://gateway:8088" style="width:100%;background:var(--s2);border:1px solid var(--b);color:var(--t);font-size:6.5px;padding:2px 4px;border-radius:2px;font-family:inherit">
+<div style="display:flex;gap:2px;margin-top:2px"><input id="gwUser" placeholder="user" style="flex:1;background:var(--s2);border:1px solid var(--b);color:var(--t);font-size:6px;padding:1px 3px;border-radius:2px;font-family:inherit"><input id="gwPass" type="password" placeholder="pass" style="flex:1;background:var(--s2);border:1px solid var(--b);color:var(--t);font-size:6px;padding:1px 3px;border-radius:2px;font-family:inherit"></div>
+<button class="bt" onclick="addGateway()" style="width:100%;margin-top:2px">+ CONNECT GATEWAY</button></div>
+<div id="gwCards"></div>
+</div>
+<div class="ph">📐 UDT DEFINITIONS</div>
+<div class="pb" id="udtTree"></div>
+<div class="ph">🏷️ TAG BROWSER</div>
+<div class="pb" id="tagTree" style="max-height:200px;overflow-y:auto"></div>
+<div class="ph">🔌 MCP TOOLS (16+)</div>
+<div class="pb" id="mcpTools" style="max-height:100px;overflow-y:auto"></div>
+</div>
+
+<div class="C">
+<div style="display:flex;background:var(--card);border-bottom:1px solid var(--b);padding:0 4px">
+<span class="tab on" onclick="showTab('chat',this)">💬 CHAT</span>
+<span class="tab" onclick="showTab('console',this)">🖥️ SCRIPT CONSOLE</span>
+<span class="tab" onclick="showTab('diag',this)">🔧 DIAGNOSTICS</span>
+<span class="tab" onclick="showTab('plantpax',this)">⚙️ PlantPAX</span>
+<span class="tab" onclick="showTab('atomic',this)">🧬 ATOMIC</span>
+</div>
+<div id="chatPanel" style="flex:1;display:flex;flex-direction:column;overflow:hidden">
+<div id="chatArea"></div>
+<div style="height:2px;background:var(--b);overflow:hidden"><div id="llmProg" style="height:100%;width:0;background:var(--wr);transition:width .3s"></div></div>
+<div id="inputArea">
+<textarea id="chatIn" placeholder="system.tag.read, create UDT, troubleshoot..." onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();send()}"></textarea>
+<button class="sBtn" onclick="send()">⚡</button>
+</div>
+</div>
+<div id="consolePanel" style="flex:1;display:none;flex-direction:column;overflow:hidden">
+<div style="flex:1;overflow-y:auto;padding:6px" id="consoleOut"></div>
+<div style="padding:4px 6px;border-top:1px solid var(--b);display:flex;gap:3px">
+<textarea id="scriptIn" placeholder="system.tag.readBlocking(['[default]Path'])" style="flex:1;background:var(--card);border:1px solid var(--b);color:var(--ok);font-size:9px;padding:4px 6px;border-radius:3px;resize:none;height:48px;font-family:inherit"></textarea>
+<button class="sBtn" onclick="runScript()" style="align-self:flex-end">▶ RUN</button>
+</div>
+</div>
+<div id="diagPanel" style="flex:1;display:none;overflow-y:auto;padding:8px;font-size:8px;line-height:1.6"></div>
+<div id="ppxPanel" style="flex:1;display:none;overflow-y:auto;padding:8px;font-size:8px;line-height:1.6"></div>
+<div id="atomicPanel" style="flex:1;display:none;overflow:hidden;flex-direction:column"></div>
+</div>
+
+<div class="R">
+<div class="ph">📋 SELECTED</div>
+<div class="pb" id="selTag">Click a tag</div>
+<div class="ph">📊 HISTORY</div>
+<div class="pb" id="tagHist" style="max-height:60px;overflow-y:auto">—</div>
+<div class="ph">⚙️ UDT DETAIL</div>
+<div class="pb" id="udtDetail" style="max-height:100px;overflow-y:auto">—</div>
+<div class="ph">🔧 SQL</div>
+<div class="pb"><textarea class="sql" id="sqlIn" placeholder="SELECT * FROM tags LIMIT 10"></textarea>
+<button class="bt" onclick="runSQL()" style="width:100%;margin-top:1px">▶ SQL</button>
+<div id="sqlOut" style="font-size:5.5px;max-height:60px;overflow-y:auto;margin-top:2px"></div></div>
+<div class="ph">📈 STATS</div>
+<div class="pb" id="dbStats">—</div>
+<div class="ph">🔧 TROUBLESHOOT</div>
+<div class="pb" id="tshoot" style="font-size:6.5px;max-height:100px;overflow-y:auto">
+<div class="d">Common issues:</div>
+<div style="cursor:pointer;padding:1px 0" onclick="askTS('tag not updating')">• Tag not updating</div>
+<div style="cursor:pointer;padding:1px 0" onclick="askTS('OPC quality bad')">• OPC quality bad</div>
+<div style="cursor:pointer;padding:1px 0" onclick="askTS('gateway connection lost')">• Gateway connection lost</div>
+<div style="cursor:pointer;padding:1px 0" onclick="askTS('PLC comm failure')">• PLC comm failure</div>
+<div style="cursor:pointer;padding:1px 0" onclick="askTS('tag history gaps')">• Tag history gaps</div>
+<div style="cursor:pointer;padding:1px 0" onclick="askTS('alarm flood')">• Alarm flooding</div>
+<div style="cursor:pointer;padding:1px 0" onclick="askTS('perspective session timeout')">• Session timeout</div>
+<div style="cursor:pointer;padding:1px 0" onclick="askTS('script error gateway scope')">• Script scope error</div>
+</div>
+</div>
+
+<div class="B">
+<button class="bt go" onclick="loadLLM()" id="llB">🧠 MODEL</button>
+<button class="bt" onclick="seedDB()">🌱 SEED</button>
+<button class="bt" onclick="seedPLC()">🔌 SEED PLC</button>
+<button class="bt" onclick="seedPlantPAX()">⚙️ SEED PPX</button>
+<button class="bt" onclick="toggleRec()" id="rB">● REC</button>
+<span style="flex:1"></span>
+<span class="d">system.tag · system.opc · system.db · system.alarm · PlantPAX 5.0</span>
+</div>
+
+<script>
+/* INLINED: src/plantpax.js (49773B) */
+// ═══ PlantPAX 5.0 Process Object Library — UDT Schema ═══
+// Rockwell Automation PlantPAX 5.0 / Library of Process Objects 5.x
+// All ~50 AOIs as Ignition UDT definitions with Cfg/Inp/Out/Sts/Cmd member groups
+// Compatible with the U schema in TAG.DB v2 — fields use {n,t,v} (UDT:X for nested)
+
+(function(){
+"use strict";
+
+// Common building blocks (referenced as UDT:X within PlantPAX defs)
+const PPX = {
+  // ── Standard PlantPAX command/status pattern ──
+  P_CmdSrc:{p:null,desc:'Command source selection (Operator/Program/External/Maintenance/Override)',
+    f:[{n:'OperLock',t:'B',v:false},{n:'ProgLock',t:'B',v:false},
+       {n:'OperPriority',t:'B',v:false},{n:'OverrideOn',t:'B',v:false},
+       {n:'MaintOn',t:'B',v:false},{n:'OutOfService',t:'B',v:false},
+       {n:'Source',t:'I',v:1}, // 0=Override 1=Maint 2=Prog 3=Oper 4=External
+       {n:'SourceText',t:'S',v:'Operator'}]},
+
+  P_AlarmStd:{p:null,desc:'Standard PlantPAX alarm block — used as nested member',
+    f:[{n:'Inp',t:'B',v:false},{n:'Cfg_Exists',t:'B',v:true},
+       {n:'Cfg_Severity',t:'I',v:500},{n:'Cfg_OnDelay',t:'F',v:0},
+       {n:'Cfg_OffDelay',t:'F',v:0},{n:'Cfg_MinDuration',t:'F',v:0},
+       {n:'Cfg_ShelfTime',t:'F',v:600},{n:'Sts_Active',t:'B',v:false},
+       {n:'Sts_Acked',t:'B',v:true},{n:'Sts_Suppressed',t:'B',v:false},
+       {n:'Sts_Disabled',t:'B',v:false},{n:'Sts_Shelved',t:'B',v:false},
+       {n:'Sts_InAlarm',t:'B',v:false},{n:'Cmd_Ack',t:'B',v:false},
+       {n:'Cmd_Reset',t:'B',v:false},{n:'Cmd_Disable',t:'B',v:false},
+       {n:'Cmd_Shelve',t:'B',v:false}]},
+
+  P_Notification:{p:null,desc:'Operator notification/message member',
+    f:[{n:'Sts_Active',t:'B',v:false},{n:'Sts_Severity',t:'I',v:0},
+       {n:'Sts_Message',t:'S',v:''},{n:'Cmd_Ack',t:'B',v:false}]},
+};
+
+// ════════════════════════════════════════════════════════════════════════════
+// CORE PROCESS OBJECTS
+// ════════════════════════════════════════════════════════════════════════════
+Object.assign(PPX, {
+
+  // ─── P_AIn — Analog Input ─────────────────────────────────────────────────
+  P_AIn:{p:null,desc:'Analog input with scaling, alarms, threshold detection',
+    f:[
+      // Inp
+      {n:'Inp_PVData',t:'F',v:0},{n:'Inp_PVRaw',t:'F',v:0},
+      {n:'Inp_PVBad',t:'B',v:false},{n:'Inp_PVUncertain',t:'B',v:false},
+      {n:'Inp_Sim',t:'F',v:0},{n:'Inp_PVHHThresh',t:'F',v:95},
+      {n:'Inp_PVHThresh',t:'F',v:85},{n:'Inp_PVLThresh',t:'F',v:15},
+      {n:'Inp_PVLLThresh',t:'F',v:5},
+      // Cfg
+      {n:'Cfg_PVEUMin',t:'F',v:0},{n:'Cfg_PVEUMax',t:'F',v:100},
+      {n:'Cfg_PVRawMin',t:'F',v:4},{n:'Cfg_PVRawMax',t:'F',v:20},
+      {n:'Cfg_PVEU',t:'S',v:'%'},{n:'Cfg_HasMoreObj',t:'B',v:true},
+      {n:'Cfg_Filt_TC',t:'F',v:0},{n:'Cfg_PVDeadband',t:'F',v:0.5},
+      {n:'Cfg_PVROCPosLim',t:'F',v:0},{n:'Cfg_PVROCNegLim',t:'F',v:0},
+      // Sts
+      {n:'Val',t:'F',v:0},{n:'Val_PV',t:'F',v:0},
+      {n:'Sts_PVBad',t:'B',v:false},{n:'Sts_PVUncertain',t:'B',v:false},
+      {n:'Sts_PVFault',t:'B',v:false},{n:'Sts_PVHH',t:'B',v:false},
+      {n:'Sts_PVH',t:'B',v:false},{n:'Sts_PVL',t:'B',v:false},
+      {n:'Sts_PVLL',t:'B',v:false},{n:'Sts_NotReady',t:'B',v:false},
+      // Cmd
+      {n:'PCmd_Reset',t:'B',v:false},{n:'PCmd_AcqLock',t:'B',v:false},
+      // CmdSrc/Alarms
+      {n:'CmdSrc',t:'UDT:P_CmdSrc'},
+      {n:'PVHH',t:'UDT:P_AlarmStd'},{n:'PVH',t:'UDT:P_AlarmStd'},
+      {n:'PVL',t:'UDT:P_AlarmStd'},{n:'PVLL',t:'UDT:P_AlarmStd'},
+      {n:'PVROCPos',t:'UDT:P_AlarmStd'},{n:'PVROCNeg',t:'UDT:P_AlarmStd'},
+      {n:'PVFault',t:'UDT:P_AlarmStd'},{n:'PVUncertain',t:'UDT:P_AlarmStd'},
+    ]},
+
+  // ─── P_AInAdv — Analog Input Advanced (extends P_AIn) ─────────────────────
+  P_AInAdv:{p:'P_AIn',desc:'Analog input with extended diagnostics, redundancy, voting',
+    f:[{n:'Cfg_FailMode',t:'I',v:0},{n:'Cfg_Voting',t:'I',v:0},
+       {n:'Inp_PVData2',t:'F',v:0},{n:'Inp_PVData3',t:'F',v:0},
+       {n:'Sts_VoteMismatch',t:'B',v:false},
+       {n:'PVMismatch',t:'UDT:P_AlarmStd'}]},
+
+  // ─── P_AOut — Analog Output ───────────────────────────────────────────────
+  P_AOut:{p:null,desc:'Analog output with rate-of-change limits, fail mode',
+    f:[
+      {n:'Inp_OutOK',t:'B',v:true},{n:'Inp_FB',t:'F',v:0},
+      {n:'Inp_FBBad',t:'B',v:false},{n:'Inp_PVData',t:'F',v:0},
+      {n:'Cfg_OutEUMin',t:'F',v:0},{n:'Cfg_OutEUMax',t:'F',v:100},
+      {n:'Cfg_OutEU',t:'S',v:'%'},{n:'Cfg_OutFailMode',t:'I',v:0},
+      {n:'Cfg_OutFailValue',t:'F',v:0},{n:'Cfg_OutROCPosLim',t:'F',v:0},
+      {n:'Cfg_OutROCNegLim',t:'F',v:0},{n:'Cfg_OperOutMin',t:'F',v:0},
+      {n:'Cfg_OperOutMax',t:'F',v:100},{n:'Cfg_HasMoreObj',t:'B',v:true},
+      {n:'Val',t:'F',v:0},{n:'Val_Out',t:'F',v:0},{n:'Val_FB',t:'F',v:0},
+      {n:'Sts_OutOK',t:'B',v:true},{n:'Sts_OutFailed',t:'B',v:false},
+      {n:'Sts_FBDev',t:'B',v:false},{n:'Sts_OutClamped',t:'B',v:false},
+      {n:'Sts_OperOut',t:'B',v:false},{n:'Sts_NotReady',t:'B',v:false},
+      {n:'PCmd_Reset',t:'B',v:false},{n:'OCmd_Out',t:'F',v:0},
+      {n:'CmdSrc',t:'UDT:P_CmdSrc'},
+      {n:'IOFault',t:'UDT:P_AlarmStd'},{n:'FailToRespond',t:'UDT:P_AlarmStd'},
+    ]},
+
+  // ─── P_DIn — Discrete Input ───────────────────────────────────────────────
+  P_DIn:{p:null,desc:'Discrete input with debounce, fault-state reporting',
+    f:[{n:'Inp_PVData',t:'B',v:false},{n:'Inp_PVBad',t:'B',v:false},
+       {n:'Inp_Sim',t:'B',v:false},
+       {n:'Cfg_OnDelay',t:'F',v:0},{n:'Cfg_OffDelay',t:'F',v:0},
+       {n:'Cfg_HasMoreObj',t:'B',v:true},{n:'Cfg_Reverse',t:'B',v:false},
+       {n:'Cfg_Desc0',t:'S',v:'Off'},{n:'Cfg_Desc1',t:'S',v:'On'},
+       {n:'Val',t:'B',v:false},{n:'Val_PV',t:'B',v:false},
+       {n:'Sts_PV',t:'B',v:false},{n:'Sts_PVBad',t:'B',v:false},
+       {n:'Sts_PVChan0',t:'B',v:false},{n:'Sts_PVChan1',t:'B',v:false},
+       {n:'Sts_NotReady',t:'B',v:false},
+       {n:'PCmd_Reset',t:'B',v:false},{n:'CmdSrc',t:'UDT:P_CmdSrc'},
+       {n:'TgtDisagree',t:'UDT:P_AlarmStd'},{n:'IOFault',t:'UDT:P_AlarmStd'}]},
+
+  // ─── P_DOut — Discrete Output ─────────────────────────────────────────────
+  P_DOut:{p:null,desc:'Discrete output (latched/pulsed) with feedback monitoring',
+    f:[{n:'Inp_OutOK',t:'B',v:true},{n:'Inp_FB',t:'B',v:false},
+       {n:'Inp_FBBad',t:'B',v:false},{n:'Inp_Reset',t:'B',v:false},
+       {n:'Cfg_OutMode',t:'I',v:0}, // 0=latch 1=pulse 2=time
+       {n:'Cfg_PulseT',t:'F',v:0.5},{n:'Cfg_OutFailMode',t:'I',v:0},
+       {n:'Cfg_OutFailValue',t:'B',v:false},
+       {n:'Cfg_FBOnDelay',t:'F',v:1},{n:'Cfg_FBOffDelay',t:'F',v:1},
+       {n:'Cfg_HasMoreObj',t:'B',v:true},
+       {n:'Val',t:'B',v:false},{n:'Val_Out',t:'B',v:false},
+       {n:'Sts_OutOK',t:'B',v:true},{n:'Sts_OutFailed',t:'B',v:false},
+       {n:'Sts_FBDev',t:'B',v:false},{n:'Sts_NotReady',t:'B',v:false},
+       {n:'OCmd_Out',t:'B',v:false},{n:'PCmd_Reset',t:'B',v:false},
+       {n:'CmdSrc',t:'UDT:P_CmdSrc'},
+       {n:'IOFault',t:'UDT:P_AlarmStd'},{n:'FailToRespond',t:'UDT:P_AlarmStd'}]},
+
+  // ─── P_Mode — Mode Selection (Operator/Program/Override/Maint/External) ──
+  P_Mode:{p:null,desc:'Mode selection — Hand/Maintenance/Override/Program/Operator/External',
+    f:[{n:'Inp_OwnerCmd',t:'I',v:0},{n:'Cfg_RemOper',t:'B',v:true},
+       {n:'Cfg_RemMaint',t:'B',v:true},{n:'Cfg_OperOnly',t:'B',v:false},
+       {n:'Cfg_ExtAcqAsOper',t:'B',v:false},
+       {n:'Sts_Hand',t:'B',v:false},{n:'Sts_Maint',t:'B',v:false},
+       {n:'Sts_Override',t:'B',v:false},{n:'Sts_Program',t:'B',v:false},
+       {n:'Sts_Operator',t:'B',v:true},{n:'Sts_External',t:'B',v:false},
+       {n:'Sts_Mode',t:'I',v:4},{n:'Sts_ModeText',t:'S',v:'Operator'},
+       {n:'Sts_NoMode',t:'B',v:false},
+       {n:'PCmd_AcqLock',t:'B',v:false},{n:'PCmd_Unlock',t:'B',v:false},
+       {n:'PCmd_Operator',t:'B',v:false},{n:'PCmd_Program',t:'B',v:false},
+       {n:'PCmd_External',t:'B',v:false},{n:'PCmd_Override',t:'B',v:false},
+       {n:'PCmd_Maint',t:'B',v:false},{n:'PCmd_Hand',t:'B',v:false},
+       {n:'OCmd_Operator',t:'B',v:false},{n:'OCmd_Program',t:'B',v:false},
+       {n:'OCmd_External',t:'B',v:false}]},
+
+  // ─── P_Permissive — Permissive logic (start permits) ──────────────────────
+  P_Permissive:{p:null,desc:'Permissive logic — bypassable start conditions',
+    f:[{n:'Inp_Perm00',t:'B',v:true},{n:'Inp_Perm01',t:'B',v:true},
+       {n:'Inp_Perm02',t:'B',v:true},{n:'Inp_Perm03',t:'B',v:true},
+       {n:'Inp_Perm04',t:'B',v:true},{n:'Inp_Perm05',t:'B',v:true},
+       {n:'Inp_Perm06',t:'B',v:true},{n:'Inp_Perm07',t:'B',v:true},
+       {n:'Cfg_PermBypassable',t:'I',v:0},{n:'Cfg_PermLogic',t:'I',v:0},
+       {n:'Cfg_HasMoreObj',t:'B',v:true},
+       {n:'Sts_PermBypassed',t:'B',v:false},{n:'Sts_PermOK',t:'B',v:true},
+       {n:'Sts_AnyPerm',t:'B',v:false},{n:'Sts_AllPerm',t:'B',v:true},
+       {n:'OCmd_Bypass',t:'B',v:false},{n:'OCmd_Check',t:'B',v:false},
+       {n:'CmdSrc',t:'UDT:P_CmdSrc'}]},
+
+  // ─── P_Interlock — Interlock logic with first-out detection ───────────────
+  P_Interlock:{p:null,desc:'Interlock logic — non-bypassable shutdown trips with first-out',
+    f:[{n:'Inp_Intlk00',t:'B',v:true},{n:'Inp_Intlk01',t:'B',v:true},
+       {n:'Inp_Intlk02',t:'B',v:true},{n:'Inp_Intlk03',t:'B',v:true},
+       {n:'Inp_Intlk04',t:'B',v:true},{n:'Inp_Intlk05',t:'B',v:true},
+       {n:'Inp_Intlk06',t:'B',v:true},{n:'Inp_Intlk07',t:'B',v:true},
+       {n:'Cfg_IntlkBypassable',t:'I',v:0},{n:'Cfg_IntlkLatch',t:'I',v:255},
+       {n:'Cfg_HasMoreObj',t:'B',v:true},
+       {n:'Sts_IntlkBypassed',t:'B',v:false},{n:'Sts_IntlkTrip',t:'B',v:false},
+       {n:'Sts_IntlkOK',t:'B',v:true},{n:'Sts_IntlkFirstOut',t:'I',v:-1},
+       {n:'Sts_IntlkFirstOutText',t:'S',v:''},
+       {n:'OCmd_Bypass',t:'B',v:false},{n:'OCmd_Reset',t:'B',v:false},
+       {n:'CmdSrc',t:'UDT:P_CmdSrc'},
+       {n:'IntlkTrip',t:'UDT:P_AlarmStd'}]},
+
+  // ─── P_Restart — Restart inhibit timer ────────────────────────────────────
+  P_Restart:{p:null,desc:'Restart inhibit — minimum on/off time before restart allowed',
+    f:[{n:'Inp_Run',t:'B',v:false},{n:'Inp_Stop',t:'B',v:false},
+       {n:'Cfg_RestartInh',t:'F',v:30},{n:'Cfg_StartsPerHr',t:'I',v:6},
+       {n:'Sts_RestartInh',t:'B',v:false},{n:'Sts_TimeRem',t:'F',v:0},
+       {n:'Sts_StartsThisHr',t:'I',v:0},{n:'Sts_StartsExceeded',t:'B',v:false},
+       {n:'PCmd_Reset',t:'B',v:false},
+       {n:'StartsExceeded',t:'UDT:P_AlarmStd'}]},
+
+  // ─── P_Reset — Reset distribution ─────────────────────────────────────────
+  P_Reset:{p:null,desc:'Reset propagation — distributes operator/program reset commands',
+    f:[{n:'Inp_AlmAck',t:'B',v:false},{n:'Inp_AlmReset',t:'B',v:false},
+       {n:'Sts_OCmdReset',t:'B',v:false},{n:'Sts_PCmdReset',t:'B',v:false},
+       {n:'Sts_OCmdAck',t:'B',v:false},{n:'Sts_PCmdAck',t:'B',v:false},
+       {n:'OCmd_Reset',t:'B',v:false},{n:'OCmd_Ack',t:'B',v:false},
+       {n:'PCmd_Reset',t:'B',v:false},{n:'PCmd_Ack',t:'B',v:false}]},
+
+  // ─── P_Alarm — Standalone alarm block ─────────────────────────────────────
+  P_Alarm:{p:null,desc:'Standalone alarm — inputs, severity, shelving, suppression',
+    f:[{n:'Inp_Alm',t:'B',v:false},{n:'Inp_AlmAck',t:'B',v:false},
+       {n:'Inp_AlmReset',t:'B',v:false},
+       {n:'Cfg_Exists',t:'B',v:true},{n:'Cfg_Severity',t:'I',v:500},
+       {n:'Cfg_OnDelay',t:'F',v:0},{n:'Cfg_OffDelay',t:'F',v:0},
+       {n:'Cfg_MinDuration',t:'F',v:0},{n:'Cfg_ShelfTime',t:'F',v:600},
+       {n:'Cfg_AckRequired',t:'B',v:true},{n:'Cfg_ResetRequired',t:'B',v:false},
+       {n:'Cfg_AlmClass',t:'S',v:'Process'},{n:'Cfg_AlmTag',t:'S',v:''},
+       {n:'Cfg_HasMoreObj',t:'B',v:false},
+       {n:'Sts_Active',t:'B',v:false},{n:'Sts_Acked',t:'B',v:true},
+       {n:'Sts_Suppressed',t:'B',v:false},{n:'Sts_Disabled',t:'B',v:false},
+       {n:'Sts_Shelved',t:'B',v:false},{n:'Sts_InAlarm',t:'B',v:false},
+       {n:'Sts_AlmInh',t:'B',v:false},{n:'Sts_TimeShelved',t:'F',v:0},
+       {n:'OCmd_Ack',t:'B',v:false},{n:'OCmd_Reset',t:'B',v:false},
+       {n:'OCmd_Disable',t:'B',v:false},{n:'OCmd_Enable',t:'B',v:false},
+       {n:'OCmd_Shelve',t:'B',v:false},{n:'OCmd_Unshelve',t:'B',v:false},
+       {n:'OCmd_Suppress',t:'B',v:false},{n:'OCmd_Unsuppress',t:'B',v:false}]},
+});
+
+// ════════════════════════════════════════════════════════════════════════════
+// MOTORS / VFD
+// ════════════════════════════════════════════════════════════════════════════
+Object.assign(PPX, {
+
+  // ─── P_Motor — Single-speed motor ─────────────────────────────────────────
+  P_Motor:{p:null,desc:'Single-speed motor — start/stop/jog with feedback monitoring',
+    f:[{n:'Inp_Run',t:'B',v:false},{n:'Inp_Stop',t:'B',v:false},
+       {n:'Inp_FailToStart',t:'B',v:false},{n:'Inp_FailToStop',t:'B',v:false},
+       {n:'Inp_Hand',t:'B',v:false},{n:'Inp_Avail',t:'B',v:true},
+       {n:'Inp_OperReq',t:'B',v:false},{n:'Inp_Reset',t:'B',v:false},
+       {n:'Inp_FdbkBad',t:'B',v:false},{n:'Inp_Sim',t:'B',v:false},
+       {n:'Inp_IntlkOK',t:'B',v:true},{n:'Inp_NBIntlkOK',t:'B',v:true},
+       {n:'Inp_PermOK',t:'B',v:true},{n:'Inp_NBPermOK',t:'B',v:true},
+       {n:'Cfg_HasJog',t:'B',v:false},{n:'Cfg_HasIntlkObj',t:'B',v:true},
+       {n:'Cfg_HasPermObj',t:'B',v:true},{n:'Cfg_HasMoreObj',t:'B',v:true},
+       {n:'Cfg_FailToStartT',t:'F',v:5},{n:'Cfg_FailToStopT',t:'F',v:5},
+       {n:'Cfg_PCmdClear',t:'B',v:false},{n:'Cfg_OCmdResets',t:'B',v:true},
+       {n:'Cfg_StartCnvrt',t:'F',v:1},{n:'Cfg_RunTimeUnits',t:'S',v:'hr'},
+       {n:'Val',t:'I',v:0},{n:'Val_Cmd',t:'B',v:false},
+       {n:'Val_Fdbk',t:'B',v:false},{n:'Val_Run',t:'B',v:false},
+       {n:'Val_Owner',t:'I',v:0},
+       {n:'Sts_Available',t:'B',v:true},{n:'Sts_Running',t:'B',v:false},
+       {n:'Sts_Stopped',t:'B',v:true},{n:'Sts_Stopping',t:'B',v:false},
+       {n:'Sts_Starting',t:'B',v:false},{n:'Sts_Jogging',t:'B',v:false},
+       {n:'Sts_FailToStart',t:'B',v:false},{n:'Sts_FailToStop',t:'B',v:false},
+       {n:'Sts_IntlkTrip',t:'B',v:false},{n:'Sts_FdbkBad',t:'B',v:false},
+       {n:'Sts_NotReady',t:'B',v:false},{n:'Sts_RunTime',t:'F',v:0},
+       {n:'Sts_StartCount',t:'I',v:0},{n:'Sts_RunsToday',t:'I',v:0},
+       {n:'OCmd_Start',t:'B',v:false},{n:'OCmd_Stop',t:'B',v:false},
+       {n:'OCmd_Jog',t:'B',v:false},{n:'OCmd_Reset',t:'B',v:false},
+       {n:'PCmd_Start',t:'B',v:false},{n:'PCmd_Stop',t:'B',v:false},
+       {n:'PCmd_Jog',t:'B',v:false},{n:'PCmd_Reset',t:'B',v:false},
+       {n:'CmdSrc',t:'UDT:P_CmdSrc'},{n:'Mode',t:'UDT:P_Mode'},
+       {n:'Restart',t:'UDT:P_Restart'},
+       {n:'FailToStart',t:'UDT:P_AlarmStd'},{n:'FailToStop',t:'UDT:P_AlarmStd'},
+       {n:'IntlkTrip',t:'UDT:P_AlarmStd'},{n:'FdbkFault',t:'UDT:P_AlarmStd'},
+       {n:'IOFault',t:'UDT:P_AlarmStd'}]},
+
+  // ─── P_MotorRevFL — Reversing motor ───────────────────────────────────────
+  P_MotorRevFL:{p:'P_Motor',desc:'Reversing motor — fwd/rev contactors with anti-plug interlock',
+    f:[{n:'Inp_RunRev',t:'B',v:false},{n:'Inp_FailToReverse',t:'B',v:false},
+       {n:'Cfg_AntiPlugT',t:'F',v:1},{n:'Cfg_HasRev',t:'B',v:true},
+       {n:'Sts_RunningRev',t:'B',v:false},{n:'Sts_RunningFwd',t:'B',v:false},
+       {n:'Sts_AntiPlug',t:'B',v:false},
+       {n:'OCmd_Fwd',t:'B',v:false},{n:'OCmd_Rev',t:'B',v:false},
+       {n:'PCmd_Fwd',t:'B',v:false},{n:'PCmd_Rev',t:'B',v:false}]},
+
+  // ─── P_Motor2Spd — Two-speed motor ────────────────────────────────────────
+  P_Motor2Spd:{p:'P_Motor',desc:'Two-speed motor — high/low speed selection',
+    f:[{n:'Inp_RunHi',t:'B',v:false},{n:'Inp_RunLo',t:'B',v:false},
+       {n:'Cfg_TransitionT',t:'F',v:2},
+       {n:'Sts_RunningHi',t:'B',v:false},{n:'Sts_RunningLo',t:'B',v:false},
+       {n:'OCmd_RunLo',t:'B',v:false},{n:'OCmd_RunHi',t:'B',v:false}]},
+
+  // ─── P_PF755 — Allen-Bradley PowerFlex 755 VFD ───────────────────────────
+  P_PF755:{p:null,desc:'Allen-Bradley PowerFlex 755 VFD — full faceplate object',
+    f:[{n:'Inp_Run',t:'B',v:false},{n:'Inp_Active',t:'B',v:false},
+       {n:'Inp_AtSpeed',t:'B',v:false},{n:'Inp_Faulted',t:'B',v:false},
+       {n:'Inp_FaultCode',t:'I',v:0},{n:'Inp_AlmCode',t:'I',v:0},
+       {n:'Inp_OutputFreq',t:'F',v:0},{n:'Inp_OutputCurrent',t:'F',v:0},
+       {n:'Inp_OutputVolts',t:'F',v:0},{n:'Inp_OutputPower',t:'F',v:0},
+       {n:'Inp_DCBus',t:'F',v:680},{n:'Inp_TorqueRef',t:'F',v:0},
+       {n:'Inp_DriveTemp',t:'F',v:35},{n:'Inp_LineCurrent',t:'F',v:0},
+       {n:'Inp_SpeedRef',t:'F',v:0},{n:'Inp_SpeedFb',t:'F',v:0},
+       {n:'Cfg_MinSpeed',t:'F',v:0},{n:'Cfg_MaxSpeed',t:'F',v:60},
+       {n:'Cfg_AccelRate',t:'F',v:10},{n:'Cfg_DecelRate',t:'F',v:10},
+       {n:'Cfg_JogSpeed',t:'F',v:5},{n:'Cfg_HasJog',t:'B',v:true},
+       {n:'Cfg_HasRev',t:'B',v:true},{n:'Cfg_HasIntlkObj',t:'B',v:true},
+       {n:'Cfg_HasPermObj',t:'B',v:true},{n:'Cfg_FailToStartT',t:'F',v:5},
+       {n:'Cfg_DriveType',t:'S',v:'PF755'},{n:'Cfg_RatedHP',t:'F',v:50},
+       {n:'Cfg_RatedFLA',t:'F',v:65},{n:'Cfg_RatedRPM',t:'F',v:1750},
+       {n:'Val',t:'I',v:0},{n:'Val_SpeedRef',t:'F',v:0},
+       {n:'Val_SpeedFb',t:'F',v:0},
+       {n:'Sts_Available',t:'B',v:true},{n:'Sts_Running',t:'B',v:false},
+       {n:'Sts_RunningRev',t:'B',v:false},{n:'Sts_AtSpeed',t:'B',v:false},
+       {n:'Sts_Accel',t:'B',v:false},{n:'Sts_Decel',t:'B',v:false},
+       {n:'Sts_Faulted',t:'B',v:false},{n:'Sts_Alarm',t:'B',v:false},
+       {n:'Sts_DriveReady',t:'B',v:true},{n:'Sts_FaultText',t:'S',v:''},
+       {n:'OCmd_Start',t:'B',v:false},{n:'OCmd_Stop',t:'B',v:false},
+       {n:'OCmd_Fwd',t:'B',v:false},{n:'OCmd_Rev',t:'B',v:false},
+       {n:'OCmd_Jog',t:'B',v:false},{n:'OCmd_Reset',t:'B',v:false},
+       {n:'OSet_SpeedRef',t:'F',v:0},
+       {n:'PCmd_Start',t:'B',v:false},{n:'PCmd_Stop',t:'B',v:false},
+       {n:'PCmd_Reset',t:'B',v:false},{n:'PSet_SpeedRef',t:'F',v:0},
+       {n:'CmdSrc',t:'UDT:P_CmdSrc'},{n:'Mode',t:'UDT:P_Mode'},
+       {n:'Restart',t:'UDT:P_Restart'},
+       {n:'FailToStart',t:'UDT:P_AlarmStd'},{n:'IntlkTrip',t:'UDT:P_AlarmStd'},
+       {n:'DriveFault',t:'UDT:P_AlarmStd'},{n:'IOFault',t:'UDT:P_AlarmStd'}]},
+
+  // ─── P_PF753 — PowerFlex 753 (lite version) ──────────────────────────────
+  P_PF753:{p:'P_PF755',desc:'Allen-Bradley PowerFlex 753 VFD — reduced parameter set',f:[]},
+
+  // ─── P_PF525 — PowerFlex 525 (compact VFD) ───────────────────────────────
+  P_PF525:{p:'P_PF755',desc:'Allen-Bradley PowerFlex 525 compact VFD',f:[]},
+});
+
+// ════════════════════════════════════════════════════════════════════════════
+// VALVES
+// ════════════════════════════════════════════════════════════════════════════
+Object.assign(PPX, {
+
+  // ─── P_ValveSO — Solenoid-operated on/off valve ──────────────────────────
+  P_ValveSO:{p:null,desc:'Solenoid valve — single-coil on/off with optional limit switches',
+    f:[{n:'Inp_OpenLS',t:'B',v:false},{n:'Inp_ClosedLS',t:'B',v:true},
+       {n:'Inp_LSBad',t:'B',v:false},{n:'Inp_OutOK',t:'B',v:true},
+       {n:'Inp_FailToOpen',t:'B',v:false},{n:'Inp_FailToClose',t:'B',v:false},
+       {n:'Inp_Sim',t:'B',v:false},{n:'Inp_IntlkOK',t:'B',v:true},
+       {n:'Inp_NBIntlkOK',t:'B',v:true},{n:'Inp_PermOK',t:'B',v:true},
+       {n:'Cfg_HasOpenLS',t:'B',v:true},{n:'Cfg_HasClosedLS',t:'B',v:true},
+       {n:'Cfg_FailMode',t:'I',v:0}, // 0=close 1=hold 2=open
+       {n:'Cfg_TravelT',t:'F',v:5},{n:'Cfg_PulsedOpen',t:'B',v:false},
+       {n:'Cfg_PulseTime',t:'F',v:0.5},{n:'Cfg_HasIntlkObj',t:'B',v:true},
+       {n:'Cfg_HasPermObj',t:'B',v:true},{n:'Cfg_HasMoreObj',t:'B',v:true},
+       {n:'Val',t:'I',v:0},{n:'Val_Cmd',t:'B',v:false},{n:'Val_Sts',t:'I',v:1},
+       {n:'Sts_Available',t:'B',v:true},{n:'Sts_Open',t:'B',v:false},
+       {n:'Sts_Opening',t:'B',v:false},{n:'Sts_Closed',t:'B',v:true},
+       {n:'Sts_Closing',t:'B',v:false},{n:'Sts_Transit',t:'B',v:false},
+       {n:'Sts_FailToOpen',t:'B',v:false},{n:'Sts_FailToClose',t:'B',v:false},
+       {n:'Sts_IntlkTrip',t:'B',v:false},{n:'Sts_LSBad',t:'B',v:false},
+       {n:'Sts_NotReady',t:'B',v:false},
+       {n:'OCmd_Open',t:'B',v:false},{n:'OCmd_Close',t:'B',v:false},
+       {n:'OCmd_Reset',t:'B',v:false},
+       {n:'PCmd_Open',t:'B',v:false},{n:'PCmd_Close',t:'B',v:false},
+       {n:'PCmd_Reset',t:'B',v:false},
+       {n:'CmdSrc',t:'UDT:P_CmdSrc'},{n:'Mode',t:'UDT:P_Mode'},
+       {n:'FailToOpen',t:'UDT:P_AlarmStd'},{n:'FailToClose',t:'UDT:P_AlarmStd'},
+       {n:'IntlkTrip',t:'UDT:P_AlarmStd'},{n:'LSFault',t:'UDT:P_AlarmStd'},
+       {n:'IOFault',t:'UDT:P_AlarmStd'}]},
+
+  // ─── P_ValveMO — Motor-operated valve ────────────────────────────────────
+  P_ValveMO:{p:null,desc:'Motor-operated valve — open/close motor with limit switches and torque',
+    f:[{n:'Inp_OpenLS',t:'B',v:false},{n:'Inp_ClosedLS',t:'B',v:true},
+       {n:'Inp_TorqueOpenLS',t:'B',v:false},{n:'Inp_TorqueCloseLS',t:'B',v:false},
+       {n:'Inp_FailToOpen',t:'B',v:false},{n:'Inp_FailToClose',t:'B',v:false},
+       {n:'Inp_LocalRem',t:'B',v:true},{n:'Inp_OutOK',t:'B',v:true},
+       {n:'Inp_IntlkOK',t:'B',v:true},{n:'Inp_PermOK',t:'B',v:true},
+       {n:'Cfg_HasTorqueLS',t:'B',v:true},{n:'Cfg_TravelT',t:'F',v:30},
+       {n:'Cfg_FailMode',t:'I',v:1},{n:'Cfg_HasIntlkObj',t:'B',v:true},
+       {n:'Cfg_HasPermObj',t:'B',v:true},{n:'Cfg_HasMoreObj',t:'B',v:true},
+       {n:'Val',t:'I',v:0},
+       {n:'Sts_Available',t:'B',v:true},{n:'Sts_Open',t:'B',v:false},
+       {n:'Sts_Opening',t:'B',v:false},{n:'Sts_Closed',t:'B',v:true},
+       {n:'Sts_Closing',t:'B',v:false},{n:'Sts_Transit',t:'B',v:false},
+       {n:'Sts_LocalSel',t:'B',v:false},{n:'Sts_TorqueTrip',t:'B',v:false},
+       {n:'Sts_FailToOpen',t:'B',v:false},{n:'Sts_FailToClose',t:'B',v:false},
+       {n:'Sts_IntlkTrip',t:'B',v:false},{n:'Sts_NotReady',t:'B',v:false},
+       {n:'OCmd_Open',t:'B',v:false},{n:'OCmd_Close',t:'B',v:false},
+       {n:'OCmd_Stop',t:'B',v:false},{n:'OCmd_Reset',t:'B',v:false},
+       {n:'PCmd_Open',t:'B',v:false},{n:'PCmd_Close',t:'B',v:false},
+       {n:'PCmd_Stop',t:'B',v:false},
+       {n:'CmdSrc',t:'UDT:P_CmdSrc'},{n:'Mode',t:'UDT:P_Mode'},
+       {n:'FailToOpen',t:'UDT:P_AlarmStd'},{n:'FailToClose',t:'UDT:P_AlarmStd'},
+       {n:'TorqueTrip',t:'UDT:P_AlarmStd'},{n:'IntlkTrip',t:'UDT:P_AlarmStd'},
+       {n:'IOFault',t:'UDT:P_AlarmStd'}]},
+
+  // ─── P_ValveHO — Hand-operated valve (passive position monitor) ──────────
+  P_ValveHO:{p:null,desc:'Hand-operated valve — position monitoring only, no command',
+    f:[{n:'Inp_OpenLS',t:'B',v:false},{n:'Inp_ClosedLS',t:'B',v:true},
+       {n:'Cfg_HasOpenLS',t:'B',v:true},{n:'Cfg_HasClosedLS',t:'B',v:true},
+       {n:'Cfg_TgtClosed',t:'B',v:true},{n:'Cfg_HasMoreObj',t:'B',v:false},
+       {n:'Sts_Open',t:'B',v:false},{n:'Sts_Closed',t:'B',v:true},
+       {n:'Sts_AtTgt',t:'B',v:true},{n:'Sts_NotAtTgt',t:'B',v:false},
+       {n:'OSet_TgtOpen',t:'B',v:false},{n:'OSet_TgtClosed',t:'B',v:true},
+       {n:'NotAtTgt',t:'UDT:P_AlarmStd'},{n:'LSFault',t:'UDT:P_AlarmStd'}]},
+
+  // ─── P_ValveStats — Valve statistics tracker ─────────────────────────────
+  P_ValveStats:{p:null,desc:'Valve cycle counter, accumulated travel time, age in service',
+    f:[{n:'Inp_Open',t:'B',v:false},{n:'Inp_Closed',t:'B',v:true},
+       {n:'Cfg_CycleLimit',t:'I',v:100000},{n:'Cfg_TravelLimit',t:'F',v:1000000},
+       {n:'Cfg_HasMoreObj',t:'B',v:false},
+       {n:'Sts_CycleCount',t:'I',v:0},{n:'Sts_TravelTime',t:'F',v:0},
+       {n:'Sts_LastCycleT',t:'F',v:0},{n:'Sts_AvgCycleT',t:'F',v:0},
+       {n:'Sts_CycleLimitReached',t:'B',v:false},{n:'Sts_AgeInService',t:'F',v:0},
+       {n:'OCmd_ResetCount',t:'B',v:false},
+       {n:'CycleLimit',t:'UDT:P_AlarmStd'},{n:'TravelLimit',t:'UDT:P_AlarmStd'}]},
+
+  // ─── P_ValveMP — Mix-proof / double-seat valve (3-coil) ──────────────────
+  P_ValveMP:{p:null,desc:'Mix-proof / double-seat valve — 3 coils (main, upper-seat lift, lower-seat lift)',
+    f:[{n:'Inp_OpenLS',t:'B',v:false},{n:'Inp_ClosedLS',t:'B',v:true},
+       {n:'Inp_USLiftLS',t:'B',v:false},{n:'Inp_LSLiftLS',t:'B',v:false},
+       {n:'Inp_IntlkOK',t:'B',v:true},{n:'Inp_PermOK',t:'B',v:true},
+       {n:'Cfg_TravelT',t:'F',v:5},{n:'Cfg_LiftPulseT',t:'F',v:1},
+       {n:'Cfg_HasIntlkObj',t:'B',v:true},{n:'Cfg_HasMoreObj',t:'B',v:true},
+       {n:'Sts_Open',t:'B',v:false},{n:'Sts_Closed',t:'B',v:true},
+       {n:'Sts_USLifted',t:'B',v:false},{n:'Sts_LSLifted',t:'B',v:false},
+       {n:'OCmd_Open',t:'B',v:false},{n:'OCmd_Close',t:'B',v:false},
+       {n:'OCmd_USLift',t:'B',v:false},{n:'OCmd_LSLift',t:'B',v:false},
+       {n:'CmdSrc',t:'UDT:P_CmdSrc'},{n:'Mode',t:'UDT:P_Mode'},
+       {n:'FailToOpen',t:'UDT:P_AlarmStd'},{n:'FailToClose',t:'UDT:P_AlarmStd'},
+       {n:'FailToLift',t:'UDT:P_AlarmStd'},{n:'IntlkTrip',t:'UDT:P_AlarmStd'}]},
+});
+
+// ════════════════════════════════════════════════════════════════════════════
+// CONTROL / PID
+// ════════════════════════════════════════════════════════════════════════════
+Object.assign(PPX, {
+
+  // ─── P_PIDE — Enhanced PID controller ────────────────────────────────────
+  P_PIDE:{p:null,desc:'Enhanced PID — full PlantPAX controller with gain sched, AT, ratio, cascade',
+    f:[{n:'Inp_PV',t:'F',v:0},{n:'Inp_PVBad',t:'B',v:false},
+       {n:'Inp_PVUncertain',t:'B',v:false},
+       {n:'Inp_CVInitVal',t:'F',v:0},{n:'Inp_CVInitReq',t:'B',v:false},
+       {n:'Inp_FF',t:'F',v:0},{n:'Inp_HandFB',t:'F',v:0},
+       {n:'Inp_BiasOper',t:'F',v:0},{n:'Inp_RatioMult',t:'F',v:1},
+       {n:'Inp_CasMaster',t:'F',v:0},
+       {n:'Cfg_PVEUMin',t:'F',v:0},{n:'Cfg_PVEUMax',t:'F',v:100},
+       {n:'Cfg_PVEU',t:'S',v:'%'},{n:'Cfg_CVEUMin',t:'F',v:0},
+       {n:'Cfg_CVEUMax',t:'F',v:100},{n:'Cfg_CVEU',t:'S',v:'%'},
+       {n:'Cfg_SPMin',t:'F',v:0},{n:'Cfg_SPMax',t:'F',v:100},
+       {n:'Cfg_SPRateUp',t:'F',v:0},{n:'Cfg_SPRateDn',t:'F',v:0},
+       {n:'Cfg_PGain',t:'F',v:1},{n:'Cfg_IGain',t:'F',v:0.1},
+       {n:'Cfg_DGain',t:'F',v:0},{n:'Cfg_FGain',t:'F',v:1},
+       {n:'Cfg_DBand',t:'F',v:0},{n:'Cfg_PVTrackSP',t:'B',v:false},
+       {n:'Cfg_HasIntlkObj',t:'B',v:false},{n:'Cfg_HasPermObj',t:'B',v:false},
+       {n:'Cfg_HasMoreObj',t:'B',v:true},{n:'Cfg_HasGainSched',t:'B',v:false},
+       {n:'Cfg_HasAT',t:'B',v:true},
+       {n:'Val',t:'I',v:0},{n:'Val_PV',t:'F',v:0},{n:'Val_SP',t:'F',v:50},
+       {n:'Val_CV',t:'F',v:0},{n:'Val_Err',t:'F',v:0},
+       {n:'Val_FF',t:'F',v:0},{n:'Val_Bias',t:'F',v:0},
+       {n:'Sts_Available',t:'B',v:true},{n:'Sts_AutoMode',t:'B',v:false},
+       {n:'Sts_ManualMode',t:'B',v:true},{n:'Sts_CasMode',t:'B',v:false},
+       {n:'Sts_HandMode',t:'B',v:false},{n:'Sts_OvrdMode',t:'B',v:false},
+       {n:'Sts_SPHi',t:'B',v:false},{n:'Sts_SPLo',t:'B',v:false},
+       {n:'Sts_CVHi',t:'B',v:false},{n:'Sts_CVLo',t:'B',v:false},
+       {n:'Sts_DevHi',t:'B',v:false},{n:'Sts_DevLo',t:'B',v:false},
+       {n:'Sts_AT_Active',t:'B',v:false},{n:'Sts_PVBad',t:'B',v:false},
+       {n:'Sts_NotReady',t:'B',v:false},
+       {n:'OCmd_Auto',t:'B',v:false},{n:'OCmd_Manual',t:'B',v:false},
+       {n:'OCmd_Cas',t:'B',v:false},{n:'OCmd_AT_Start',t:'B',v:false},
+       {n:'OCmd_AT_Abort',t:'B',v:false},{n:'OCmd_Reset',t:'B',v:false},
+       {n:'OSet_SP',t:'F',v:50},{n:'OSet_CV',t:'F',v:0},
+       {n:'PCmd_Auto',t:'B',v:false},{n:'PCmd_Manual',t:'B',v:false},
+       {n:'PCmd_Cas',t:'B',v:false},{n:'PSet_SP',t:'F',v:50},
+       {n:'PSet_CV',t:'F',v:0},
+       {n:'CmdSrc',t:'UDT:P_CmdSrc'},{n:'Mode',t:'UDT:P_Mode'},
+       {n:'PVBadAlm',t:'UDT:P_AlarmStd'},{n:'DevHiAlm',t:'UDT:P_AlarmStd'},
+       {n:'DevLoAlm',t:'UDT:P_AlarmStd'},{n:'IntlkTrip',t:'UDT:P_AlarmStd'}]},
+
+  // ─── P_PIDPID — Cascade PID (master/slave) ───────────────────────────────
+  P_PIDPID:{p:null,desc:'Cascade PID pair — outer (primary) drives inner (secondary) SP',
+    f:[{n:'Outer',t:'UDT:P_PIDE'},{n:'Inner',t:'UDT:P_PIDE'},
+       {n:'Cfg_OuterMaxOutSP',t:'F',v:100},{n:'Cfg_OuterMinOutSP',t:'F',v:0},
+       {n:'Sts_CasOK',t:'B',v:true},{n:'Sts_CasOpen',t:'B',v:false}]},
+
+  // ─── P_RatioStation — Ratio control ──────────────────────────────────────
+  P_RatioStation:{p:null,desc:'Ratio station — wild flow × ratio = controlled SP',
+    f:[{n:'Inp_Wild',t:'F',v:0},{n:'Inp_PV',t:'F',v:0},
+       {n:'Cfg_RatioMin',t:'F',v:0},{n:'Cfg_RatioMax',t:'F',v:10},
+       {n:'Val_Ratio',t:'F',v:1},{n:'Val_RatioActual',t:'F',v:1},
+       {n:'Val_OutSP',t:'F',v:0},{n:'Sts_RatioDev',t:'B',v:false},
+       {n:'OSet_Ratio',t:'F',v:1},{n:'PSet_Ratio',t:'F',v:1},
+       {n:'CmdSrc',t:'UDT:P_CmdSrc'},{n:'Mode',t:'UDT:P_Mode'},
+       {n:'RatioDev',t:'UDT:P_AlarmStd'}]},
+
+  // ─── P_LL — Lead/Lag dynamic compensator ─────────────────────────────────
+  P_LL:{p:null,desc:'Lead/Lag dynamic compensator',
+    f:[{n:'Inp_PV',t:'F',v:0},{n:'Cfg_LeadT',t:'F',v:0},
+       {n:'Cfg_LagT',t:'F',v:0},{n:'Cfg_Gain',t:'F',v:1},
+       {n:'Val_Out',t:'F',v:0}]},
+
+  // ─── P_DeadTime — Dead-time delay ────────────────────────────────────────
+  P_DeadTime:{p:null,desc:'Dead-time delay element',
+    f:[{n:'Inp_PV',t:'F',v:0},{n:'Cfg_DelayT',t:'F',v:0},
+       {n:'Val_Out',t:'F',v:0}]},
+
+  // ─── P_Totalizer — Flow totalizer ────────────────────────────────────────
+  P_Totalizer:{p:null,desc:'Flow totalizer with target/preset, multiple counters',
+    f:[{n:'Inp_PV',t:'F',v:0},{n:'Inp_PVBad',t:'B',v:false},
+       {n:'Inp_RstReq',t:'B',v:false},
+       {n:'Cfg_PVEU',t:'S',v:'gpm'},{n:'Cfg_TotalEU',t:'S',v:'gal'},
+       {n:'Cfg_PVPerTotal',t:'F',v:60},{n:'Cfg_TgtTotal',t:'F',v:0},
+       {n:'Cfg_HasTgt',t:'B',v:false},
+       {n:'Val_Total',t:'F',v:0},{n:'Val_TotalDay',t:'F',v:0},
+       {n:'Val_TotalShift',t:'F',v:0},{n:'Val_TotalBatch',t:'F',v:0},
+       {n:'Sts_Running',t:'B',v:false},{n:'Sts_Stopped',t:'B',v:true},
+       {n:'Sts_AtTgt',t:'B',v:false},{n:'Sts_TgtRem',t:'F',v:0},
+       {n:'OCmd_Start',t:'B',v:false},{n:'OCmd_Stop',t:'B',v:false},
+       {n:'OCmd_Reset',t:'B',v:false},{n:'OCmd_RstDay',t:'B',v:false},
+       {n:'OCmd_RstShift',t:'B',v:false},{n:'OCmd_RstBatch',t:'B',v:false},
+       {n:'OSet_TgtTotal',t:'F',v:0},
+       {n:'CmdSrc',t:'UDT:P_CmdSrc'},
+       {n:'TgtReached',t:'UDT:P_AlarmStd'}]},
+});
+
+// ════════════════════════════════════════════════════════════════════════════
+// SUPPORT / UTILITY OBJECTS
+// ════════════════════════════════════════════════════════════════════════════
+Object.assign(PPX, {
+
+  // ─── P_PSL — Process state logic / sequencer step ────────────────────────
+  P_PSL:{p:null,desc:'Process state logic — phase/step manager with state outputs',
+    f:[{n:'Inp_PSC_Cmd',t:'I',v:0}, // PhaseStateCommand
+       {n:'Inp_TransExt',t:'B',v:false},
+       {n:'Cfg_StepMax',t:'I',v:32},{n:'Cfg_HasMoreObj',t:'B',v:false},
+       {n:'Val_StepNo',t:'I',v:0},{n:'Val_StepName',t:'S',v:''},
+       {n:'Val_StepTime',t:'F',v:0},{n:'Val_State',t:'I',v:0},
+       {n:'Sts_Idle',t:'B',v:true},{n:'Sts_Running',t:'B',v:false},
+       {n:'Sts_Held',t:'B',v:false},{n:'Sts_Complete',t:'B',v:false},
+       {n:'Sts_Aborted',t:'B',v:false},{n:'Sts_Stopped',t:'B',v:false},
+       {n:'OCmd_Reset',t:'B',v:false},{n:'OCmd_Start',t:'B',v:false},
+       {n:'OCmd_Hold',t:'B',v:false},{n:'OCmd_Restart',t:'B',v:false},
+       {n:'OCmd_Abort',t:'B',v:false},{n:'OCmd_Stop',t:'B',v:false},
+       {n:'OCmd_Clear',t:'B',v:false},
+       {n:'CmdSrc',t:'UDT:P_CmdSrc'}]},
+
+  // ─── P_Gate — Logic gate (AND/OR/XOR/NOT/NAND/NOR) ───────────────────────
+  P_Gate:{p:null,desc:'Configurable logic gate — AND/OR/XOR/NOT/NAND/NOR with up to 8 inputs',
+    f:[{n:'Inp_00',t:'B',v:false},{n:'Inp_01',t:'B',v:false},
+       {n:'Inp_02',t:'B',v:false},{n:'Inp_03',t:'B',v:false},
+       {n:'Inp_04',t:'B',v:false},{n:'Inp_05',t:'B',v:false},
+       {n:'Inp_06',t:'B',v:false},{n:'Inp_07',t:'B',v:false},
+       {n:'Cfg_GateType',t:'I',v:0}, // 0=AND 1=OR 2=XOR 3=NAND 4=NOR
+       {n:'Cfg_InpEnable',t:'I',v:255},{n:'Cfg_InpInvert',t:'I',v:0},
+       {n:'Cfg_OutInvert',t:'B',v:false},
+       {n:'Val_Out',t:'B',v:false},{n:'Val_InpUsed',t:'I',v:0}]},
+
+  // ─── P_RunTime — Run-hour tracker ────────────────────────────────────────
+  P_RunTime:{p:null,desc:'Run-time / hour meter with maintenance interval alarms',
+    f:[{n:'Inp_Run',t:'B',v:false},
+       {n:'Cfg_RunTimeUnits',t:'S',v:'hr'},
+       {n:'Cfg_MaintInterval',t:'F',v:1000},{n:'Cfg_HasMaint',t:'B',v:true},
+       {n:'Val_RunTime',t:'F',v:0},{n:'Val_RunTimeSinceMaint',t:'F',v:0},
+       {n:'Val_StartCount',t:'I',v:0},{n:'Val_StartsToday',t:'I',v:0},
+       {n:'Sts_MaintReq',t:'B',v:false},{n:'Sts_Running',t:'B',v:false},
+       {n:'OCmd_RstMaint',t:'B',v:false},{n:'OCmd_RstAll',t:'B',v:false},
+       {n:'MaintRequired',t:'UDT:P_AlarmStd'}]},
+
+  // ─── P_DoseFM — Dosing (flow-meter based) ────────────────────────────────
+  P_DoseFM:{p:null,desc:'Dosing controller — flowmeter-based slow/fast dose with prediction',
+    f:[{n:'Inp_PV',t:'F',v:0},{n:'Inp_Total',t:'F',v:0},
+       {n:'Inp_DoseValve',t:'B',v:false},
+       {n:'Cfg_FastDoseRate',t:'F',v:100},{n:'Cfg_SlowDoseRate',t:'F',v:10},
+       {n:'Cfg_SlowDoseAmt',t:'F',v:50},{n:'Cfg_OvershootCorr',t:'B',v:true},
+       {n:'Sts_Dosing',t:'B',v:false},{n:'Sts_FastDose',t:'B',v:false},
+       {n:'Sts_SlowDose',t:'B',v:false},{n:'Sts_Complete',t:'B',v:false},
+       {n:'Val_Target',t:'F',v:0},{n:'Val_Delivered',t:'F',v:0},
+       {n:'Val_Remaining',t:'F',v:0},
+       {n:'OCmd_Start',t:'B',v:false},{n:'OCmd_Stop',t:'B',v:false},
+       {n:'OSet_Target',t:'F',v:0},
+       {n:'CmdSrc',t:'UDT:P_CmdSrc'},
+       {n:'Overshoot',t:'UDT:P_AlarmStd'},{n:'Undershoot',t:'UDT:P_AlarmStd'}]},
+
+  // ─── P_DoseWS — Dosing (weigh-scale based) ───────────────────────────────
+  P_DoseWS:{p:'P_DoseFM',desc:'Dosing controller — weigh-scale based with tare and stability check',
+    f:[{n:'Inp_Stable',t:'B',v:true},{n:'Cfg_StableT',t:'F',v:2},
+       {n:'OCmd_Tare',t:'B',v:false}]},
+
+  // ─── P_StrapTbl — Tank strapping table (level→volume) ────────────────────
+  P_StrapTbl:{p:null,desc:'Tank strapping table — interpolates volume from level',
+    f:[{n:'Inp_PV',t:'F',v:0},{n:'Cfg_TableSize',t:'I',v:11},
+       {n:'Cfg_TableLvl',t:'S',v:'[0,10,20,30,40,50,60,70,80,90,100]'},
+       {n:'Cfg_TableVol',t:'S',v:'[0,80,180,290,410,530,650,770,890,990,1000]'},
+       {n:'Val_Out',t:'F',v:0},{n:'Sts_Extrap',t:'B',v:false}]},
+});
+
+// ════════════════════════════════════════════════════════════════════════════
+// COMMUNICATION / DIAGNOSTICS
+// ════════════════════════════════════════════════════════════════════════════
+Object.assign(PPX, {
+
+  P_DeviceMon:{p:null,desc:'Device communication monitor — heartbeat / connection status',
+    f:[{n:'Inp_Heartbeat',t:'B',v:false},{n:'Inp_DeviceOK',t:'B',v:true},
+       {n:'Cfg_HeartbeatT',t:'F',v:5},{n:'Sts_DeviceOK',t:'B',v:true},
+       {n:'Sts_CommLost',t:'B',v:false},{n:'Sts_LastUpdate',t:'D',v:''},
+       {n:'CommLost',t:'UDT:P_AlarmStd'}]},
+
+  P_PhaseSig:{p:null,desc:'PhaseManager signal interface — for S88 Equipment Phase coupling',
+    f:[{n:'Inp_PhaseState',t:'I',v:0},{n:'Inp_PhaseFailure',t:'I',v:0},
+       {n:'Sts_Running',t:'B',v:false},{n:'Sts_Held',t:'B',v:false},
+       {n:'Sts_Complete',t:'B',v:false},
+       {n:'PCmd_Hold',t:'B',v:false},{n:'PCmd_Restart',t:'B',v:false}]},
+
+  P_Logger:{p:null,desc:'Data logger — captures values to historian on trigger',
+    f:[{n:'Inp_Trigger',t:'B',v:false},{n:'Cfg_LogPath',t:'S',v:''},
+       {n:'Cfg_BatchSize',t:'I',v:100},{n:'Sts_LoggedCount',t:'I',v:0},
+       {n:'Sts_LastLogged',t:'D',v:''}]},
+
+  P_Recipe:{p:null,desc:'Recipe selection / parameter set carrier',
+    f:[{n:'Inp_Active',t:'B',v:false},
+       {n:'Cfg_RecipeID',t:'S',v:'DEFAULT'},
+       {n:'Val_Param01',t:'F',v:0},{n:'Val_Param02',t:'F',v:0},
+       {n:'Val_Param03',t:'F',v:0},{n:'Val_Param04',t:'F',v:0},
+       {n:'Val_Param05',t:'F',v:0},{n:'Val_Param06',t:'F',v:0},
+       {n:'Val_Param07',t:'F',v:0},{n:'Val_Param08',t:'F',v:0}]},
+});
+
+// ════════════════════════════════════════════════════════════════════════════
+// EXPORT
+// ════════════════════════════════════════════════════════════════════════════
+// ═══ Type-code expander: B/F/I/S/D → full Ignition type names ═══
+const __TC = {B:'Boolean',F:'Float8',I:'Int4',S:'String',D:'DateTime'};
+for (const k in PPX) {
+  const def = PPX[k]; if (!def || !def.f) continue;
+  for (const fld of def.f) {
+    if (fld.t && __TC[fld.t]) fld.t = __TC[fld.t];
+  }
+}
+window.PLANTPAX_UDTS = PPX;
+
+// ─────────────────────────────────────────────────────────────────────────
+// Generators — Faceplate JSON, Tag XML, SVG symbol
+// ─────────────────────────────────────────────────────────────────────────
+
+window.ppxFaceplate = function(udtName){
+  const def = PPX[udtName];
+  if(!def) return {error:'unknown UDT'};
+  const fields = window.resolveUDT ? window.resolveUDT(udtName) : [];
+  const cfg = fields.filter(f=>f.n.startsWith('Cfg_')||f.n.includes('/Cfg_'));
+  const sts = fields.filter(f=>f.n.startsWith('Sts_')||f.n.includes('/Sts_'));
+  const cmd = fields.filter(f=>f.n.startsWith('OCmd_')||f.n.startsWith('PCmd_')||f.n.startsWith('OSet_'));
+  return {
+    custom:{},
+    params:{Tag:{}},
+    propConfig:{'params.Tag':{persistent:true,paramDirection:'input'}},
+    root:{
+      type:'ia.container.coord',
+      meta:{name:'root'},
+      props:{style:{backgroundColor:'#1e2a3a',color:'#e8f0ff'}},
+      children:[
+        {type:'ia.display.label',meta:{name:'header'},
+          position:{x:0,y:0,height:32,width:520},
+          props:{text:udtName+' — {view.params.Tag.Cfg_Description}',
+            style:{fontSize:14,fontWeight:'bold',backgroundColor:'#0066a8',padding:6,color:'#fff'}}},
+        {type:'ia.display.label',meta:{name:'modeLabel'},
+          position:{x:0,y:32,height:24,width:520},
+          props:{text:'Mode: {view.params.Tag.Mode/Sts_ModeText} • Source: {view.params.Tag.CmdSrc/SourceText}',
+            style:{fontSize:11,backgroundColor:'#0a1620',padding:4,color:'#38b5f9'}}},
+        {type:'ia.container.flex',meta:{name:'tabs'},
+          position:{x:0,y:56,height:32,width:520},
+          props:{direction:'row',justify:'flex-start',
+            style:{backgroundColor:'#0a1620',borderBottom:'1px solid #1a2030'}},
+          children:['Operator','Maintenance','Engineering','Diagnostics','Alarms','Trends','Help'].map((t,i)=>(
+            {type:'ia.input.button',meta:{name:'tab_'+i},
+             position:{grow:0,basis:'auto'},
+             props:{text:t,style:{margin:2,fontSize:10,
+               backgroundColor:i===0?'#0066a8':'transparent',color:'#fff'}}}))},
+        {type:'ia.display.label',meta:{name:'sectionCfg'},
+          position:{x:8,y:96,height:18,width:240},
+          props:{text:'CONFIG ('+cfg.length+')',style:{color:'#f57c20',fontWeight:'bold',fontSize:10}}},
+        {type:'ia.container.coord',meta:{name:'cfgList'},
+          position:{x:8,y:118,height:200,width:240},
+          props:{style:{backgroundColor:'#0a1620',padding:4,overflow:'auto'}},
+          children:cfg.slice(0,12).map((f,i)=>(
+            {type:'ia.display.label',meta:{name:'cfg_'+i},
+             position:{x:0,y:i*16,height:14,width:230},
+             props:{text:f.n.split('/').pop()+' = {view.params.Tag.'+f.n+'}',
+               style:{fontSize:9,color:'#98a8c0'}}}))},
+        {type:'ia.display.label',meta:{name:'sectionSts'},
+          position:{x:264,y:96,height:18,width:240},
+          props:{text:'STATUS ('+sts.length+')',style:{color:'#42e898',fontWeight:'bold',fontSize:10}}},
+        {type:'ia.container.coord',meta:{name:'stsList'},
+          position:{x:264,y:118,height:200,width:240},
+          props:{style:{backgroundColor:'#0a1620',padding:4,overflow:'auto'}},
+          children:sts.slice(0,12).map((f,i)=>(
+            {type:'ia.display.label',meta:{name:'sts_'+i},
+             position:{x:0,y:i*16,height:14,width:230},
+             props:{text:f.n.split('/').pop()+' = {view.params.Tag.'+f.n+'}',
+               style:{fontSize:9,color:'#42e898'}}}))},
+        {type:'ia.display.label',meta:{name:'sectionCmd'},
+          position:{x:8,y:330,height:18,width:496},
+          props:{text:'COMMANDS',style:{color:'#a080ff',fontWeight:'bold',fontSize:10}}},
+        {type:'ia.container.flex',meta:{name:'cmdRow'},
+          position:{x:8,y:352,height:36,width:496},
+          props:{direction:'row',wrap:'wrap',gap:4},
+          children:cmd.slice(0,8).map((f,i)=>(
+            {type:'ia.input.button',meta:{name:'cmd_'+i},
+             position:{grow:0,basis:'auto'},
+             props:{text:f.n.split('/').pop().replace('OCmd_','').replace('PCmd_','').replace('OSet_',''),
+               style:{margin:2,fontSize:9,padding:'4 8',backgroundColor:'#1a3050',color:'#a080ff'}}}))},
+      ]
+    },
+    meta:{plantpaxObject:udtName,version:'5.0',generated:new Date().toISOString()}
+  };
+};
+
+window.ppxQuick = function(udtName){
+  return {
+    root:{type:'ia.container.coord',
+      props:{style:{backgroundColor:'#1e2a3a',padding:4,width:200,height:80}},
+      children:[
+        {type:'ia.display.label',
+         position:{x:4,y:4,width:192,height:18},
+         props:{text:udtName+' {view.params.Tag.Cfg_Tag}',style:{fontWeight:'bold',color:'#fff',fontSize:11}}},
+        {type:'ia.display.label',
+         position:{x:4,y:24,width:192,height:14},
+         props:{text:'Mode: {view.params.Tag.Mode/Sts_ModeText}',style:{color:'#38b5f9',fontSize:10}}},
+        {type:'ia.display.label',
+         position:{x:4,y:40,width:192,height:14},
+         props:{text:'PV: {view.params.Tag.Val_PV} {view.params.Tag.Cfg_PVEU}',style:{color:'#42e898',fontSize:10}}},
+        {type:'ia.display.label',
+         position:{x:4,y:56,width:192,height:14},
+         props:{text:'CV: {view.params.Tag.Val_CV} {view.params.Tag.Cfg_CVEU}',style:{color:'#f0a030',fontSize:10}}}
+      ]},
+    meta:{plantpaxObject:udtName,kind:'quick'}
+  };
+};
+
+window.ppxEngineering = function(udtName){
+  const fields = window.resolveUDT ? window.resolveUDT(udtName) : [];
+  return {
+    root:{type:'ia.container.coord',
+      props:{style:{backgroundColor:'#0a1620',padding:6}},
+      children:[
+        {type:'ia.display.label',position:{x:0,y:0,width:600,height:24},
+         props:{text:'ENGINEERING — '+udtName,style:{fontWeight:'bold',color:'#ffd050',fontSize:13}}},
+        {type:'ia.display.table',position:{x:0,y:32,width:600,height:400},
+         props:{columns:[{field:'name',header:'Member'},{field:'type',header:'Type'},{field:'value',header:'Value'}],
+                data:fields.slice(0,40).map(f=>({name:f.n,type:f.t,value:'{view.params.Tag.'+f.n+'}'}))}}]},
+    meta:{plantpaxObject:udtName,kind:'engineering'}
+  };
+};
+
+window.ppxTagXML = function(udtName,instancePath){
+  const fields = window.resolveUDT ? window.resolveUDT(udtName) : [];
+  const safe = (instancePath||'').replace(/^\[default\]/,'');
+  let xml = `  <udt name="${udtName}" path="${safe}" tagType="UdtInstance" typeId="${udtName}">\n`;
+  fields.slice(0,200).forEach(f=>{
+    const dt = f.t==='Float8'?'Float8':f.t==='Int4'?'Int4':f.t==='Boolean'?'Boolean':f.t==='DateTime'?'DateTime':'String';
+    xml += `    <tag name="${f.n}" dataType="${dt}" value="${(f.v??'').toString().replace(/"/g,'&quot;')}"/>\n`;
+  });
+  xml += `  </udt>\n`;
+  return xml;
+};
+
+window.ppxRenderSVG = function(udtName){
+  // Simple ISA-101 indication — green=running, red=fault, gray=idle, yellow=warn
+  const sym = {
+    P_Motor:`<circle cx="50" cy="50" r="34" fill="#1e2a3a" stroke="#42e898" stroke-width="2"/><text x="50" y="55" text-anchor="middle" fill="#42e898" font-family="monospace" font-size="14">M</text>`,
+    P_MotorRevFL:`<circle cx="50" cy="50" r="34" fill="#1e2a3a" stroke="#42e898" stroke-width="2"/><text x="50" y="55" text-anchor="middle" fill="#42e898" font-family="monospace" font-size="11">M↔</text>`,
+    P_PF755:`<rect x="20" y="22" width="60" height="56" rx="3" fill="#1e2a3a" stroke="#a080ff" stroke-width="2"/><text x="50" y="48" text-anchor="middle" fill="#a080ff" font-family="monospace" font-size="9">VFD</text><text x="50" y="62" text-anchor="middle" fill="#42e898" font-family="monospace" font-size="9">PF755</text>`,
+    P_ValveSO:`<polygon points="20,30 50,50 20,70" fill="#42e898" stroke="#fff" stroke-width="1.5"/><polygon points="80,30 50,50 80,70" fill="#42e898" stroke="#fff" stroke-width="1.5"/>`,
+    P_ValveMO:`<polygon points="20,30 50,50 20,70" fill="#f0a030" stroke="#fff" stroke-width="1.5"/><polygon points="80,30 50,50 80,70" fill="#f0a030" stroke="#fff" stroke-width="1.5"/><circle cx="50" cy="20" r="6" fill="#a080ff"/><line x1="50" y1="26" x2="50" y2="50" stroke="#a080ff" stroke-width="2"/>`,
+    P_ValveHO:`<polygon points="20,30 50,50 20,70" fill="#3e4e64" stroke="#fff" stroke-width="1.5"/><polygon points="80,30 50,50 80,70" fill="#3e4e64" stroke="#fff" stroke-width="1.5"/><line x1="40" y1="14" x2="60" y2="14" stroke="#fff" stroke-width="3"/>`,
+    P_AIn:`<circle cx="50" cy="50" r="30" fill="#1e2a3a" stroke="#38b5f9" stroke-width="2"/><text x="50" y="48" text-anchor="middle" fill="#38b5f9" font-family="monospace" font-size="10">AI</text><text x="50" y="62" text-anchor="middle" fill="#42e898" font-family="monospace" font-size="9">{PV}</text>`,
+    P_AOut:`<circle cx="50" cy="50" r="30" fill="#1e2a3a" stroke="#f0a030" stroke-width="2"/><text x="50" y="48" text-anchor="middle" fill="#f0a030" font-family="monospace" font-size="10">AO</text><text x="50" y="62" text-anchor="middle" fill="#42e898" font-family="monospace" font-size="9">{CV}</text>`,
+    P_DIn:`<rect x="22" y="32" width="56" height="36" rx="4" fill="#1e2a3a" stroke="#38b5f9" stroke-width="2"/><text x="50" y="55" text-anchor="middle" fill="#38b5f9" font-family="monospace" font-size="11">DI</text>`,
+    P_DOut:`<rect x="22" y="32" width="56" height="36" rx="4" fill="#1e2a3a" stroke="#f0a030" stroke-width="2"/><text x="50" y="55" text-anchor="middle" fill="#f0a030" font-family="monospace" font-size="11">DO</text>`,
+    P_PIDE:`<rect x="14" y="28" width="72" height="44" rx="3" fill="#1e2a3a" stroke="#a080ff" stroke-width="2"/><text x="50" y="48" text-anchor="middle" fill="#a080ff" font-family="monospace" font-size="11">PID</text><text x="50" y="62" text-anchor="middle" fill="#42e898" font-family="monospace" font-size="8">SP/PV/CV</text>`,
+  };
+  const body = sym[udtName] || `<rect x="20" y="20" width="60" height="60" rx="4" fill="#1e2a3a" stroke="#3e4e64" stroke-width="2" stroke-dasharray="3,3"/><text x="50" y="55" text-anchor="middle" fill="#98a8c0" font-family="monospace" font-size="9">${udtName.replace('P_','')}</text>`;
+  return `<svg viewBox="0 0 100 100" width="120" height="120" style="background:#0a1620;border:1px solid #1a2030;border-radius:3px">${body}</svg>`;
+};
+
+console.log('PlantPAX 5.0 library loaded:', Object.keys(PPX).length, 'UDT defs');
+})();
+
+</script>
+<script id="ppx-tdb-raw" type="text/plain">
+@plantpax "PlantPAX 5.0 Process Object Library" ⚙️
+; ═══ Token grammar v2 — nested compression ═══
+; Tokens encoded by frequency: <Cfg/Inp/Sts/Cmd/OCmd/PCmd/OSet/PSet/Val/Sts_/Inp_/Cfg_/_Active/_Acked/_Mode/_PV/_CV/_SP/_Bypass/_Reset/_Ack/_Start/_Stop/_Open/_Close/_Run/_Fault/_Available/Boolean/Float8/Int4/String/UDT:>
+; Each UDT: !<name> [parent] -> <fld:type:default> ...
+; Multi-version encoding: <name>@<version> for v3.5/4.0/5.0 differences.
+; Component encoding (verified 2026-04 from docs.inductiveautomation.com/docs/8.1/appendix/components):
+
+§ignition_components
+; ── Display palette (verified) ──
+ia.display.label                Label
+ia.display.led-display          LED Display
+ia.display.numeric-label        Numeric Label
+ia.display.icon                 Icon
+ia.display.image                Image
+ia.display.markdown             Markdown
+ia.display.menu-tree            Menu Tree
+ia.display.qr-code              QR Code
+ia.display.progress             Progress
+ia.display.meter                Meter
+ia.display.cylindrical-tank     Cylindrical Tank
+ia.display.linear-scale         Linear Scale
+ia.display.tank-level           Tank Level Indicator
+ia.display.thermometer          Thermometer
+ia.display.video-player         Video Player
+ia.display.signal-generator     Signal Generator
+
+; ── Input palette (verified) ──
+ia.input.barcode-scanner        Barcode Scanner Input
+ia.input.button                 Button
+ia.input.checkbox               Checkbox
+ia.input.datetime-input         DateTime Input
+ia.input.datetime-picker        DateTime Picker
+ia.input.dropdown               Dropdown
+ia.input.file-upload            File Upload
+ia.input.formatted-text-field   Formatted Text Field
+ia.input.multi-state-button     Multi-State Button
+ia.input.numeric-entry-field    Numeric Entry Field
+ia.input.one-shot-button        One-Shot Button
+ia.input.password-field         Password Field
+ia.input.radio-group            Radio Group
+ia.input.signature-pad          Signature Pad
+ia.input.slider                 Slider
+ia.input.tag-browser            Tag Browser
+ia.input.text-area              Text Area
+ia.input.text-field             Text Field
+ia.input.toggle                 Toggle Switch
+
+; ── Container palette (verified) ──
+ia.container.coord              Coordinate Container
+ia.container.flex               Flex Container
+ia.container.column             Column Container
+ia.container.tab                Tab Container
+ia.container.embedded           Embedded View
+ia.container.breakpoint         Breakpoint Container
+ia.container.canvas             Canvas Container
+ia.container.split              Split Container
+ia.container.accordion          Accordion
+
+; ── Chart palette (verified) ──
+ia.chart.time-series-chart      Time Series Chart
+ia.chart.bar-chart              Bar Chart
+ia.chart.pie-chart              Pie Chart
+ia.chart.sparkline-chart        Sparkline Chart
+ia.chart.xy-chart               XY Chart
+ia.chart.status-chart           Status Chart
+ia.chart.power-chart            Power Chart
+ia.chart.equipment-schedule     Equipment Schedule
+
+; ── Tables / Calendars ──
+ia.display.table                Table
+ia.display.tree                 Tree View
+ia.display.calendar             Calendar
+ia.display.month-calendar       Month View Calendar
+
+; ── Alarms / Status ──
+ia.alarm.status-table           Alarm Status Table
+ia.alarm.journal-table          Alarm Journal Table
+
+; ── Shapes (vector) ──
+ia.shapes.rectangle             Rectangle
+ia.shapes.ellipse               Ellipse
+ia.shapes.line                  Line
+ia.shapes.polygon               Polygon
+ia.shapes.path                  Path
+ia.shapes.arrow                 Arrow
+
+§version_matrix
+; PlantPAX version encoding — what changed between releases
+v3.5 base:P_Motor,P_AIn,P_AOut,P_DIn,P_DOut,P_ValveSO,P_PIDE,P_Mode,P_Permissive,P_Interlock,P_Restart,P_Reset,P_Alarm,P_Gate,P_RunTime,P_PSL
+v4.0 add:P_PF755,P_PF753,P_PF525,P_ValveMO,P_ValveStats,P_ValveHO,P_PIDPID,P_RatioStation,P_LL,P_DeadTime,P_Totalizer,P_DoseFM,P_DoseWS
+v5.0 add:P_AInAdv,P_MotorRevFL,P_Motor2Spd,P_ValveMP,P_StrapTbl,P_DeviceMon,P_PhaseSig,P_Logger,P_Recipe
+v5.0 enhance:P_Mode+ExtAcq,P_Interlock+FirstOut,P_AIn+ROC,P_PIDE+GainSched+AT,P_Motor+RestartInh
+
+§token_dict
+; Most-frequent tokens compressed to 1-2 bytes
+T01=Cfg_     T02=Inp_     T03=Sts_     T04=OCmd_   T05=PCmd_   T06=OSet_
+T07=PSet_    T08=Val_     T09=Boolean  T10=Float8  T11=Int4    T12=String
+T13=UDT:     T14=_Active  T15=_Acked   T16=_Mode   T17=_PV     T18=_CV
+T19=_SP      T20=_Reset   T21=_Ack     T22=_Start  T23=_Stop   T24=_Open
+T25=_Close   T26=_Run     T27=_Fault   T28=_Available  T29=P_Alarm  T30=P_Mode
+T31=P_CmdSrc T32=Severity T33=OnDelay  T34=OffDelay T35=PVEUMin T36=PVEUMax
+T37=HasIntlkObj T38=HasPermObj T39=IntlkTrip T40=FailToStart T41=FailToStop T42=FailToRespond
+
+§udt_v50
+; All PlantPAX 5.0 UDTs in nested-token form. Parent inheritance via [parent].
+; Format: !Name [parent] f1:type:val f2:type:val ...
+; Token refs: T01-T42 above. ufield = nested UDT member.
+
+!P_CmdSrc
+ OperLock:T09:0 ProgLock:T09:0 OperPriority:T09:0 OverrideOn:T09:0
+ MaintOn:T09:0 OutOfService:T09:0 Source:T11:1 SourceText:T12:Operator
+
+!P_Alarm
+ T02Alm:T09:0 T02AlmAck:T09:0 T02AlmReset:T09:0
+ T01Exists:T09:1 T01T32:T11:500 T01T33:T10:0 T01T34:T10:0
+ T01MinDuration:T10:0 T01ShelfTime:T10:600 T01AckRequired:T09:1
+ T01ResetRequired:T09:0 T01AlmClass:T12:Process T01AlmTag:T12:
+ T03T14:T09:0 T03T15:T09:1 T03Suppressed:T09:0 T03Disabled:T09:0
+ T03Shelved:T09:0 T03InAlarm:T09:0
+ T04T21:T09:0 T04T20:T09:0 T04Disable:T09:0 T04Enable:T09:0
+ T04Shelve:T09:0 T04Unshelve:T09:0
+
+!P_Mode
+ T02OwnerCmd:T11:0 T01RemOper:T09:1 T01RemMaint:T09:1
+ T01OperOnly:T09:0 T01ExtAcqAsOper:T09:0
+ T03Hand:T09:0 T03Maint:T09:0 T03Override:T09:0 T03Program:T09:0
+ T03Operator:T09:1 T03External:T09:0
+ T03T16:T11:4 T03ModeText:T12:Operator T03NoMode:T09:0
+ T05AcqLock:T09:0 T05Unlock:T09:0
+ T05Operator:T09:0 T05Program:T09:0 T05External:T09:0
+ T04Operator:T09:0 T04Program:T09:0 T04External:T09:0
+
+!P_Permissive
+ T02Perm00:T09:1 T02Perm01:T09:1 T02Perm02:T09:1 T02Perm03:T09:1
+ T02Perm04:T09:1 T02Perm05:T09:1 T02Perm06:T09:1 T02Perm07:T09:1
+ T01PermBypassable:T11:0 T01PermLogic:T11:0
+ T03PermBypassed:T09:0 T03PermOK:T09:1 T03AnyPerm:T09:0 T03AllPerm:T09:1
+ T04Bypass:T09:0 T04Check:T09:0
+ ufield CmdSrc:T13P_CmdSrc
+
+!P_Interlock
+ T02Intlk00:T09:1 T02Intlk01:T09:1 T02Intlk02:T09:1 T02Intlk03:T09:1
+ T02Intlk04:T09:1 T02Intlk05:T09:1 T02Intlk06:T09:1 T02Intlk07:T09:1
+ T01IntlkBypassable:T11:0 T01IntlkLatch:T11:255
+ T03IntlkBypassed:T09:0 T03IntlkTrip:T09:0 T03IntlkOK:T09:1
+ T03IntlkFirstOut:T11:-1 T03IntlkFirstOutText:T12:
+ T04Bypass:T09:0 T04T20:T09:0
+ ufield CmdSrc:T13P_CmdSrc
+ ufield T39:T13P_Alarm
+
+!P_Restart
+ T02T26:T09:0 T02T23:T09:0 T01RestartInh:T10:30 T01StartsPerHr:T11:6
+ T03RestartInh:T09:0 T03TimeRem:T10:0 T03StartsThisHr:T11:0
+ T03StartsExceeded:T09:0 T05T20:T09:0
+ ufield StartsExceeded:T13P_Alarm
+
+!P_Reset
+ T02AlmAck:T09:0 T02AlmReset:T09:0
+ T03OCmdReset:T09:0 T03PCmdReset:T09:0 T03OCmdAck:T09:0 T03PCmdAck:T09:0
+ T04T20:T09:0 T04T21:T09:0 T05T20:T09:0 T05T21:T09:0
+
+!P_AIn
+ T02PVData:T10:0 T02PVRaw:T10:0 T02PVBad:T09:0 T02PVUncertain:T09:0
+ T02Sim:T10:0 T02PVHHThresh:T10:95 T02PVHThresh:T10:85
+ T02PVLThresh:T10:15 T02PVLLThresh:T10:5
+ T01T35:T10:0 T01T36:T10:100 T01PVRawMin:T10:4 T01PVRawMax:T10:20
+ T01PVEU:T12:% T01HasMoreObj:T09:1 T01Filt_TC:T10:0 T01PVDeadband:T10:0.5
+ T01PVROCPosLim:T10:0 T01PVROCNegLim:T10:0
+ Val:T10:0 T08T17:T10:0
+ T03PVBad:T09:0 T03PVUncertain:T09:0 T03PVFault:T09:0
+ T03PVHH:T09:0 T03PVH:T09:0 T03PVL:T09:0 T03PVLL:T09:0 T03NotReady:T09:0
+ T05T20:T09:0 T05AcqLock:T09:0
+ ufield CmdSrc:T13P_CmdSrc
+ ufield PVHH:T13P_Alarm
+ ufield PVH:T13P_Alarm
+ ufield PVL:T13P_Alarm
+ ufield PVLL:T13P_Alarm
+ ufield PVROCPos:T13P_Alarm
+ ufield PVROCNeg:T13P_Alarm
+ ufield PVFault:T13P_Alarm
+
+!P_AInAdv [P_AIn]
+ T01FailMode:T11:0 T01Voting:T11:0
+ T02PVData2:T10:0 T02PVData3:T10:0
+ T03VoteMismatch:T09:0
+ ufield PVMismatch:T13P_Alarm
+
+!P_AOut
+ T02OutOK:T09:1 T02FB:T10:0 T02FBBad:T09:0 T02PVData:T10:0
+ T01OutEUMin:T10:0 T01OutEUMax:T10:100 T01OutEU:T12:%
+ T01OutFailMode:T11:0 T01OutFailValue:T10:0
+ T01OutROCPosLim:T10:0 T01OutROCNegLim:T10:0
+ T01OperOutMin:T10:0 T01OperOutMax:T10:100 T01HasMoreObj:T09:1
+ Val:T10:0 T08Out:T10:0 T08FB:T10:0
+ T03OutOK:T09:1 T03OutFailed:T09:0 T03FBDev:T09:0
+ T03OutClamped:T09:0 T03OperOut:T09:0 T03NotReady:T09:0
+ T05T20:T09:0 T04Out:T10:0
+ ufield CmdSrc:T13P_CmdSrc
+ ufield IOFault:T13P_Alarm
+ ufield T42:T13P_Alarm
+
+!P_DIn
+ T02PVData:T09:0 T02PVBad:T09:0 T02Sim:T09:0
+ T01T33:T10:0 T01T34:T10:0 T01HasMoreObj:T09:1 T01Reverse:T09:0
+ T01Desc0:T12:Off T01Desc1:T12:On
+ Val:T09:0 T08T17:T09:0
+ T03PV:T09:0 T03PVBad:T09:0 T03PVChan0:T09:0 T03PVChan1:T09:0 T03NotReady:T09:0
+ T05T20:T09:0
+ ufield CmdSrc:T13P_CmdSrc
+ ufield TgtDisagree:T13P_Alarm
+ ufield IOFault:T13P_Alarm
+
+!P_DOut
+ T02OutOK:T09:1 T02FB:T09:0 T02FBBad:T09:0 T02T20:T09:0
+ T01OutMode:T11:0 T01PulseT:T10:0.5 T01OutFailMode:T11:0 T01OutFailValue:T09:0
+ T01FBOnDelay:T10:1 T01FBOffDelay:T10:1 T01HasMoreObj:T09:1
+ Val:T09:0 T08Out:T09:0
+ T03OutOK:T09:1 T03OutFailed:T09:0 T03FBDev:T09:0 T03NotReady:T09:0
+ T04Out:T09:0 T05T20:T09:0
+ ufield CmdSrc:T13P_CmdSrc
+ ufield IOFault:T13P_Alarm
+ ufield T42:T13P_Alarm
+
+!P_Motor
+ T02T26:T09:0 T02T23:T09:0 T02T40:T09:0 T02T41:T09:0
+ T02Hand:T09:0 T02Avail:T09:1 T02OperReq:T09:0 T02T20:T09:0
+ T02FdbkBad:T09:0 T02Sim:T09:0
+ T02IntlkOK:T09:1 T02NBIntlkOK:T09:1 T02PermOK:T09:1 T02NBPermOK:T09:1
+ T01HasJog:T09:0 T01T37:T09:1 T01T38:T09:1 T01HasMoreObj:T09:1
+ T01FailToStartT:T10:5 T01FailToStopT:T10:5
+ T01PCmdClear:T09:0 T01OCmdResets:T09:1
+ T01StartCnvrt:T10:1 T01RunTimeUnits:T12:hr
+ Val:T11:0 T08Cmd:T09:0 T08Fdbk:T09:0 T08Run:T09:0 T08Owner:T11:0
+ T03T28:T09:1 T03Running:T09:0 T03Stopped:T09:1 T03Stopping:T09:0
+ T03Starting:T09:0 T03Jogging:T09:0
+ T03T40:T09:0 T03T41:T09:0 T03T39:T09:0 T03FdbkBad:T09:0 T03NotReady:T09:0
+ T03RunTime:T10:0 T03StartCount:T11:0 T03RunsToday:T11:0
+ T04T22:T09:0 T04T23:T09:0 T04Jog:T09:0 T04T20:T09:0
+ T05T22:T09:0 T05T23:T09:0 T05Jog:T09:0 T05T20:T09:0
+ ufield CmdSrc:T13P_CmdSrc
+ ufield Mode:T13P_Mode
+ ufield Restart:T13P_Restart
+ ufield T40:T13P_Alarm
+ ufield T41:T13P_Alarm
+ ufield T39:T13P_Alarm
+ ufield FdbkFault:T13P_Alarm
+ ufield IOFault:T13P_Alarm
+
+!P_MotorRevFL [P_Motor]
+ T02RunRev:T09:0 T02FailToReverse:T09:0
+ T01AntiPlugT:T10:1 T01HasRev:T09:1
+ T03RunningRev:T09:0 T03RunningFwd:T09:0 T03AntiPlug:T09:0
+ T04Fwd:T09:0 T04Rev:T09:0 T05Fwd:T09:0 T05Rev:T09:0
+
+!P_Motor2Spd [P_Motor]
+ T02RunHi:T09:0 T02RunLo:T09:0 T01TransitionT:T10:2
+ T03RunningHi:T09:0 T03RunningLo:T09:0
+ T04RunLo:T09:0 T04RunHi:T09:0
+
+!P_PF755
+ T02T26:T09:0 T02T14:T09:0 T02AtSpeed:T09:0 T02Faulted:T09:0
+ T02FaultCode:T11:0 T02AlmCode:T11:0
+ T02OutputFreq:T10:0 T02OutputCurrent:T10:0 T02OutputVolts:T10:0
+ T02OutputPower:T10:0 T02DCBus:T10:680 T02TorqueRef:T10:0
+ T02DriveTemp:T10:35 T02LineCurrent:T10:0
+ T02SpeedRef:T10:0 T02SpeedFb:T10:0
+ T01MinSpeed:T10:0 T01MaxSpeed:T10:60
+ T01AccelRate:T10:10 T01DecelRate:T10:10
+ T01JogSpeed:T10:5 T01HasJog:T09:1 T01HasRev:T09:1
+ T01T37:T09:1 T01T38:T09:1 T01FailToStartT:T10:5
+ T01DriveType:T12:PF755 T01RatedHP:T10:50 T01RatedFLA:T10:65 T01RatedRPM:T10:1750
+ Val:T11:0 T08SpeedRef:T10:0 T08SpeedFb:T10:0
+ T03T28:T09:1 T03Running:T09:0 T03RunningRev:T09:0 T03AtSpeed:T09:0
+ T03Accel:T09:0 T03Decel:T09:0 T03Faulted:T09:0 T03Alarm:T09:0
+ T03DriveReady:T09:1 T03FaultText:T12:
+ T04T22:T09:0 T04T23:T09:0 T04Fwd:T09:0 T04Rev:T09:0
+ T04Jog:T09:0 T04T20:T09:0 T06SpeedRef:T10:0
+ T05T22:T09:0 T05T23:T09:0 T05T20:T09:0 T07SpeedRef:T10:0
+ ufield CmdSrc:T13P_CmdSrc
+ ufield Mode:T13P_Mode
+ ufield Restart:T13P_Restart
+ ufield T40:T13P_Alarm
+ ufield T39:T13P_Alarm
+ ufield DriveFault:T13P_Alarm
+
+!P_PF753 [P_PF755]
+!P_PF525 [P_PF755]
+
+!P_ValveSO
+ T02OpenLS:T09:0 T02ClosedLS:T09:1 T02LSBad:T09:0 T02OutOK:T09:1
+ T02FailToOpen:T09:0 T02FailToClose:T09:0 T02Sim:T09:0
+ T02IntlkOK:T09:1 T02NBIntlkOK:T09:1 T02PermOK:T09:1
+ T01HasOpenLS:T09:1 T01HasClosedLS:T09:1
+ T01FailMode:T11:0 T01TravelT:T10:5
+ T01PulsedOpen:T09:0 T01PulseTime:T10:0.5
+ T01T37:T09:1 T01T38:T09:1 T01HasMoreObj:T09:1
+ Val:T11:0 T08Cmd:T09:0 T08Sts:T11:1
+ T03T28:T09:1 T03T24:T09:0 T03Opening:T09:0
+ T03T25:T09:1 T03Closing:T09:0 T03Transit:T09:0
+ T03FailToOpen:T09:0 T03FailToClose:T09:0
+ T03T39:T09:0 T03LSBad:T09:0 T03NotReady:T09:0
+ T04T24:T09:0 T04T25:T09:0 T04T20:T09:0
+ T05T24:T09:0 T05T25:T09:0 T05T20:T09:0
+ ufield CmdSrc:T13P_CmdSrc
+ ufield Mode:T13P_Mode
+ ufield FailToOpen:T13P_Alarm
+ ufield FailToClose:T13P_Alarm
+ ufield T39:T13P_Alarm
+ ufield LSFault:T13P_Alarm
+ ufield IOFault:T13P_Alarm
+
+!P_ValveMO
+ T02OpenLS:T09:0 T02ClosedLS:T09:1
+ T02TorqueOpenLS:T09:0 T02TorqueCloseLS:T09:0
+ T02FailToOpen:T09:0 T02FailToClose:T09:0
+ T02LocalRem:T09:1 T02OutOK:T09:1
+ T02IntlkOK:T09:1 T02PermOK:T09:1
+ T01HasTorqueLS:T09:1 T01TravelT:T10:30 T01FailMode:T11:1
+ T01T37:T09:1 T01T38:T09:1 T01HasMoreObj:T09:1
+ Val:T11:0
+ T03T28:T09:1 T03T24:T09:0 T03Opening:T09:0
+ T03T25:T09:1 T03Closing:T09:0 T03Transit:T09:0 T03LocalSel:T09:0
+ T03TorqueTrip:T09:0 T03FailToOpen:T09:0 T03FailToClose:T09:0
+ T03T39:T09:0 T03NotReady:T09:0
+ T04T24:T09:0 T04T25:T09:0 T04T23:T09:0 T04T20:T09:0
+ T05T24:T09:0 T05T25:T09:0 T05T23:T09:0
+ ufield CmdSrc:T13P_CmdSrc
+ ufield Mode:T13P_Mode
+ ufield FailToOpen:T13P_Alarm
+ ufield FailToClose:T13P_Alarm
+ ufield TorqueTrip:T13P_Alarm
+ ufield T39:T13P_Alarm
+ ufield IOFault:T13P_Alarm
+
+!P_ValveHO
+ T02OpenLS:T09:0 T02ClosedLS:T09:1
+ T01HasOpenLS:T09:1 T01HasClosedLS:T09:1
+ T01TgtClosed:T09:1 T01HasMoreObj:T09:0
+ T03T24:T09:0 T03T25:T09:1 T03AtTgt:T09:1 T03NotAtTgt:T09:0
+ T06TgtOpen:T09:0 T06TgtClosed:T09:1
+ ufield NotAtTgt:T13P_Alarm
+ ufield LSFault:T13P_Alarm
+
+!P_ValveStats
+ T02T24:T09:0 T02T25:T09:1
+ T01CycleLimit:T11:100000 T01TravelLimit:T10:1000000 T01HasMoreObj:T09:0
+ T03CycleCount:T11:0 T03TravelTime:T10:0 T03LastCycleT:T10:0 T03AvgCycleT:T10:0
+ T03CycleLimitReached:T09:0 T03AgeInService:T10:0
+ T04ResetCount:T09:0
+ ufield CycleLimit:T13P_Alarm
+ ufield TravelLimit:T13P_Alarm
+
+!P_ValveMP
+ T02OpenLS:T09:0 T02ClosedLS:T09:1 T02USLiftLS:T09:0 T02LSLiftLS:T09:0
+ T02IntlkOK:T09:1 T02PermOK:T09:1
+ T01TravelT:T10:5 T01LiftPulseT:T10:1 T01T37:T09:1 T01HasMoreObj:T09:1
+ T03T24:T09:0 T03T25:T09:1 T03USLifted:T09:0 T03LSLifted:T09:0
+ T04T24:T09:0 T04T25:T09:0 T04USLift:T09:0 T04LSLift:T09:0
+ ufield CmdSrc:T13P_CmdSrc
+ ufield Mode:T13P_Mode
+ ufield FailToOpen:T13P_Alarm
+ ufield FailToClose:T13P_Alarm
+ ufield FailToLift:T13P_Alarm
+ ufield T39:T13P_Alarm
+
+!P_PIDE
+ T02T17:T10:0 T02PVBad:T09:0 T02PVUncertain:T09:0
+ T02CVInitVal:T10:0 T02CVInitReq:T09:0 T02FF:T10:0 T02HandFB:T10:0
+ T02BiasOper:T10:0 T02RatioMult:T10:1 T02CasMaster:T10:0
+ T01T35:T10:0 T01T36:T10:100 T01PVEU:T12:%
+ T01CVEUMin:T10:0 T01CVEUMax:T10:100 T01CVEU:T12:%
+ T01SPMin:T10:0 T01SPMax:T10:100 T01SPRateUp:T10:0 T01SPRateDn:T10:0
+ T01PGain:T10:1 T01IGain:T10:0.1 T01DGain:T10:0 T01FGain:T10:1
+ T01DBand:T10:0 T01PVTrackSP:T09:0
+ T01T37:T09:0 T01T38:T09:0 T01HasMoreObj:T09:1
+ T01HasGainSched:T09:0 T01HasAT:T09:1
+ Val:T11:0 T08T17:T10:0 T08T19:T10:50 T08T18:T10:0
+ T08Err:T10:0 T08FF:T10:0 T08Bias:T10:0
+ T03T28:T09:1 T03AutoMode:T09:0 T03ManualMode:T09:1 T03CasMode:T09:0
+ T03HandMode:T09:0 T03OvrdMode:T09:0
+ T03SPHi:T09:0 T03SPLo:T09:0 T03CVHi:T09:0 T03CVLo:T09:0
+ T03DevHi:T09:0 T03DevLo:T09:0 T03AT_Active:T09:0 T03PVBad:T09:0 T03NotReady:T09:0
+ T04Auto:T09:0 T04Manual:T09:0 T04Cas:T09:0
+ T04AT_Start:T09:0 T04AT_Abort:T09:0 T04T20:T09:0
+ T06T19:T10:50 T06T18:T10:0
+ T05Auto:T09:0 T05Manual:T09:0 T05Cas:T09:0
+ T07T19:T10:50 T07T18:T10:0
+ ufield CmdSrc:T13P_CmdSrc
+ ufield Mode:T13P_Mode
+ ufield PVBadAlm:T13P_Alarm
+ ufield DevHiAlm:T13P_Alarm
+ ufield DevLoAlm:T13P_Alarm
+ ufield T39:T13P_Alarm
+
+!P_PIDPID
+ ufield Outer:T13P_PIDE
+ ufield Inner:T13P_PIDE
+ T01OuterMaxOutSP:T10:100 T01OuterMinOutSP:T10:0
+ T03CasOK:T09:1 T03CasOpen:T09:0
+
+!P_RatioStation
+ T02Wild:T10:0 T02T17:T10:0 T01RatioMin:T10:0 T01RatioMax:T10:10
+ T08Ratio:T10:1 T08RatioActual:T10:1 T08OutSP:T10:0
+ T03RatioDev:T09:0 T06Ratio:T10:1 T07Ratio:T10:1
+ ufield CmdSrc:T13P_CmdSrc
+ ufield Mode:T13P_Mode
+ ufield RatioDev:T13P_Alarm
+
+!P_LL
+ T02T17:T10:0 T01LeadT:T10:0 T01LagT:T10:0 T01Gain:T10:1 T08Out:T10:0
+
+!P_DeadTime
+ T02T17:T10:0 T01DelayT:T10:0 T08Out:T10:0
+
+!P_Totalizer
+ T02T17:T10:0 T02PVBad:T09:0 T02RstReq:T09:0
+ T01PVEU:T12:gpm T01TotalEU:T12:gal T01PVPerTotal:T10:60
+ T01TgtTotal:T10:0 T01HasTgt:T09:0
+ T08Total:T10:0 T08TotalDay:T10:0 T08TotalShift:T10:0 T08TotalBatch:T10:0
+ T03Running:T09:0 T03Stopped:T09:1 T03AtTgt:T09:0 T03TgtRem:T10:0
+ T04T22:T09:0 T04T23:T09:0 T04T20:T09:0
+ T04RstDay:T09:0 T04RstShift:T09:0 T04RstBatch:T09:0
+ T06TgtTotal:T10:0
+ ufield CmdSrc:T13P_CmdSrc
+ ufield TgtReached:T13P_Alarm
+
+!P_PSL
+ T02PSC_Cmd:T11:0 T02TransExt:T09:0
+ T01StepMax:T11:32 T01HasMoreObj:T09:0
+ T08StepNo:T11:0 T08StepName:T12: T08StepTime:T10:0 T08State:T11:0
+ T03Idle:T09:1 T03Running:T09:0 T03Held:T09:0
+ T03Complete:T09:0 T03Aborted:T09:0 T03Stopped:T09:0
+ T04T20:T09:0 T04T22:T09:0 T04Hold:T09:0
+ T04Restart:T09:0 T04Abort:T09:0 T04T23:T09:0 T04Clear:T09:0
+ ufield CmdSrc:T13P_CmdSrc
+
+!P_Gate
+ T02_00:T09:0 T02_01:T09:0 T02_02:T09:0 T02_03:T09:0
+ T02_04:T09:0 T02_05:T09:0 T02_06:T09:0 T02_07:T09:0
+ T01GateType:T11:0 T01InpEnable:T11:255 T01InpInvert:T11:0 T01OutInvert:T09:0
+ T08Out:T09:0 T08InpUsed:T11:0
+
+!P_RunTime
+ T02T26:T09:0 T01RunTimeUnits:T12:hr T01MaintInterval:T10:1000 T01HasMaint:T09:1
+ T08RunTime:T10:0 T08RunTimeSinceMaint:T10:0 T08StartCount:T11:0 T08StartsToday:T11:0
+ T03MaintReq:T09:0 T03Running:T09:0
+ T04RstMaint:T09:0 T04RstAll:T09:0
+ ufield MaintRequired:T13P_Alarm
+
+!P_DoseFM
+ T02T17:T10:0 T02Total:T10:0 T02DoseValve:T09:0
+ T01FastDoseRate:T10:100 T01SlowDoseRate:T10:10
+ T01SlowDoseAmt:T10:50 T01OvershootCorr:T09:1
+ T03Dosing:T09:0 T03FastDose:T09:0 T03SlowDose:T09:0 T03Complete:T09:0
+ T08Target:T10:0 T08Delivered:T10:0 T08Remaining:T10:0
+ T04T22:T09:0 T04T23:T09:0 T06Target:T10:0
+ ufield CmdSrc:T13P_CmdSrc
+ ufield Overshoot:T13P_Alarm
+ ufield Undershoot:T13P_Alarm
+
+!P_DoseWS [P_DoseFM]
+ T02Stable:T09:1 T01StableT:T10:2 T04Tare:T09:0
+
+!P_StrapTbl
+ T02T17:T10:0 T01TableSize:T11:11
+ T01TableLvl:T12:[0,10,20,30,40,50,60,70,80,90,100]
+ T01TableVol:T12:[0,80,180,290,410,530,650,770,890,990,1000]
+ T08Out:T10:0 T03Extrap:T09:0
+
+!P_DeviceMon
+ T02Heartbeat:T09:0 T02DeviceOK:T09:1 T01HeartbeatT:T10:5
+ T03DeviceOK:T09:1 T03CommLost:T09:0 T03LastUpdate:DateTime:
+ ufield CommLost:T13P_Alarm
+
+!P_PhaseSig
+ T02PhaseState:T11:0 T02PhaseFailure:T11:0
+ T03Running:T09:0 T03Held:T09:0 T03Complete:T09:0
+ T05Hold:T09:0 T05Restart:T09:0
+
+!P_Logger
+ T02Trigger:T09:0 T01LogPath:T12: T01BatchSize:T11:100
+ T03LoggedCount:T11:0 T03LastLogged:DateTime:
+
+!P_Recipe
+ T02T14:T09:0 T01RecipeID:T12:DEFAULT
+ T08Param01:T10:0 T08Param02:T10:0 T08Param03:T10:0 T08Param04:T10:0
+ T08Param05:T10:0 T08Param06:T10:0 T08Param07:T10:0 T08Param08:T10:0
+
+§faceplate_template
+; Standard PlantPAX faceplate skeleton — instantiated per UDT
+; Uses verified ia.* component names (see §ignition_components)
+faceplate.kind = ia.container.coord
+faceplate.tabs = Operator Maintenance Engineering Diagnostics Alarms Trends Help
+faceplate.header_bg = #0066a8
+faceplate.bg = #1e2a3a
+faceplate.tabbar = ia.container.flex
+faceplate.tab_btn = ia.input.button
+faceplate.label = ia.display.label
+faceplate.numeric = ia.display.numeric-label
+faceplate.led = ia.display.led-display
+faceplate.gauge = ia.display.meter
+faceplate.tank = ia.display.cylindrical-tank
+faceplate.scale = ia.display.linear-scale
+faceplate.cmd_btn = ia.input.button
+faceplate.cmd_oneshot = ia.input.one-shot-button
+faceplate.cmd_multi = ia.input.multi-state-button
+faceplate.sp_input = ia.input.numeric-entry-field
+faceplate.mode_dropdown = ia.input.dropdown
+faceplate.toggle = ia.input.toggle
+faceplate.alarm_table = ia.alarm.status-table
+faceplate.trend = ia.chart.time-series-chart
+faceplate.power_chart = ia.chart.power-chart
+
+</script>
+<script type="module">
+// ═══ PlantPAX TOKEN-DB loader (db/plantpax.db) ═══
+// Compact text grammar — § sections, ! UDTs, T01-T42 token dict, [parent] inheritance.
+// Parsed into window.PPX_TDB = {components, versions, tokens, udts, faceplate}
+async function loadPpxTdb(){
+  try{
+    const el=document.getElementById('ppx-tdb-raw'); if(!el)throw new Error('inline tdb missing');
+    const txt=el.textContent.replace(/^\s+/,'');
+    const TDB={raw:txt,bytes:txt.length,components:{},versions:{},tokens:{},udts:{},faceplate:{}};
+    let sec=null,cur=null;
+    for(const lineRaw of txt.split('\n')){
+      const line=lineRaw.replace(/\s+$/,'');
+      if(!line||/^[;#]/.test(line))continue;
+      if(line[0]==='@')continue; // header
+      if(line[0]==='§'){sec=line.slice(1).trim();cur=null;continue;}
+      if(sec==='ignition_components'){
+        const m=line.match(/^(\S+)\s+(.+)$/);if(m)TDB.components[m[1]]=m[2].trim();
+      }else if(sec==='version_matrix'){
+        const m=line.match(/^(v\d+\.\d+)\s+(\w+):(.+)$/);
+        if(m){TDB.versions[m[1]]=TDB.versions[m[1]]||{};TDB.versions[m[1]][m[2]]=m[3].split(',').map(s=>s.trim());}
+      }else if(sec==='token_dict'){
+        line.split(/\s+/).forEach(p=>{const e=p.split('=');if(e.length===2)TDB.tokens[e[0]]=e[1];});
+      }else if(sec==='udt_v50'){
+        if(line[0]==='!'){
+          const m=line.match(/^!(\S+)(?:\s+\[(\S+)\])?/);
+          if(m){cur={name:m[1],parent:m[2]||null,fields:[]};TDB.udts[m[1]]=cur;}
+        }else if(cur){
+          const t=line.trim();
+          if(t.startsWith('ufield ')){
+            const m=t.match(/^ufield\s+(\S+):T13(\S+)/);if(m)cur.fields.push({n:m[1],t:'UDT:'+m[2],nested:true});
+          }else{
+            t.split(/\s+/).forEach(f=>{
+              const m=f.match(/^(\S+?):(T\d+|DateTime):(.*)$/);
+              if(m){cur.fields.push({n:m[1],t:m[2],v:m[3]});}
+            });
+          }
+        }
+      }else if(sec==='faceplate_template'){
+        const m=line.match(/^faceplate\.(\S+)\s*=\s*(.+)$/);if(m)TDB.faceplate[m[1]]=m[2].trim();
+      }
+    }
+    // expand tokens in field names/types for human view
+    const expand=s=>String(s).replace(/T\d{2}/g,k=>TDB.tokens[k]||k);
+    Object.values(TDB.udts).forEach(u=>{
+      u.fields.forEach(f=>{f.nExp=expand(f.n);f.tExp=f.nested?f.t:expand(f.t);});
+    });
+    TDB.expand=expand;
+    window.PPX_TDB=TDB;
+    return TDB;
+  }catch(e){console.warn('plantpax.db load failed:',e.message);return null;}
+}
+window.loadPpxTdb=loadPpxTdb;
+</script>
+<script type="module">
+const $=id=>document.getElementById(id);
+
+// ═══ CORE UDT DEFS (process · OPC · perspective · gateway) ═══
+const U={
+Alarm:{p:null,f:[{n:'Active',t:'Boolean',v:false},{n:'Acked',t:'Boolean',v:false},{n:'Setpoint',t:'Float8',v:0},{n:'Deadband',t:'Float8',v:0.5},{n:'Priority',t:'Int4',v:3},{n:'Message',t:'String',v:''},{n:'Timestamp',t:'DateTime',v:''},{n:'AckUser',t:'String',v:''},{n:'Shelved',t:'Boolean',v:false},{n:'Pipeline',t:'String',v:'default'},{n:'DisplayPath',t:'String',v:''}]},
+ScanClass:{p:null,f:[{n:'Rate',t:'Int4',v:1000},{n:'Factor',t:'Float8',v:1},{n:'Stale',t:'Int4',v:10000},{n:'LeaseTime',t:'Int4',v:30000},{n:'Subscribed',t:'Boolean',v:true},{n:'Executing',t:'Boolean',v:false},{n:'OverrunCount',t:'Int4',v:0}]},
+ExprTag:{p:null,f:[{n:'Expression',t:'String',v:''},{n:'Enabled',t:'Boolean',v:true},{n:'Value',t:'Float8',v:0},{n:'Quality',t:'Int4',v:192},{n:'ErrorMsg',t:'String',v:''},{n:'ScanClass',t:'UDT:ScanClass'}]},
+Script:{p:null,f:[{n:'Code',t:'String',v:''},{n:'Scope',t:'String',v:'gateway'},{n:'Trigger',t:'String',v:'valueChanged'},{n:'Enabled',t:'Boolean',v:true},{n:'LastRun',t:'DateTime',v:''},{n:'LastError',t:'String',v:''},{n:'ExecCount',t:'Int4',v:0},{n:'AvgExecMs',t:'Float8',v:0}]},
+NamedQuery:{p:null,f:[{n:'Database',t:'String',v:'default'},{n:'Query',t:'String',v:''},{n:'QueryType',t:'String',v:'SELECT'},{n:'Params',t:'String',v:'{}'},{n:'CacheSec',t:'Int4',v:0},{n:'FallbackValue',t:'String',v:''},{n:'AuthProfile',t:'String',v:''}]},
+TransGroup:{p:null,f:[{n:'Name',t:'String',v:''},{n:'Enabled',t:'Boolean',v:true},{n:'Rate',t:'Int4',v:1000},{n:'Table',t:'String',v:''},{n:'Mode',t:'String',v:'history'},{n:'Items',t:'Int4',v:0},{n:'DB',t:'String',v:'default'},{n:'Script',t:'UDT:Script'}]},
+AlarmSet:{p:null,f:[{n:'HiHi',t:'UDT:Alarm'},{n:'Hi',t:'UDT:Alarm'},{n:'Lo',t:'UDT:Alarm'},{n:'LoLo',t:'UDT:Alarm'},{n:'DevHi',t:'UDT:Alarm'},{n:'DevLo',t:'UDT:Alarm'},{n:'RateOfChange',t:'UDT:Alarm'},{n:'Stale',t:'UDT:Alarm'},{n:'Count',t:'Int4',v:0},{n:'AnyActive',t:'Boolean',v:false},{n:'UnackedCount',t:'Int4',v:0}]},
+AnalogInput:{p:null,f:[{n:'Raw',t:'Int4',v:0},{n:'Scaled',t:'Float8',v:0},{n:'EngUnits',t:'String',v:''},{n:'RawLo',t:'Int4',v:0},{n:'RawHi',t:'Int4',v:32767},{n:'EngLo',t:'Float8',v:0},{n:'EngHi',t:'Float8',v:100},{n:'Clamped',t:'Boolean',v:false},{n:'ScanClass',t:'UDT:ScanClass'},{n:'Alarms',t:'UDT:AlarmSet'},{n:'OnChange',t:'UDT:Script'}]},
+AnalogOutput:{p:null,f:[{n:'SP',t:'Float8',v:0},{n:'RB',t:'Float8',v:0},{n:'EngUnits',t:'String',v:''},{n:'EngLo',t:'Float8',v:0},{n:'EngHi',t:'Float8',v:100},{n:'ClampLo',t:'Float8',v:0},{n:'ClampHi',t:'Float8',v:100},{n:'RampRate',t:'Float8',v:0},{n:'Tracking',t:'Boolean',v:false},{n:'Alarms',t:'UDT:AlarmSet'}]},
+DiscreteInput:{p:null,f:[{n:'Value',t:'Boolean',v:false},{n:'OnDelay',t:'Int4',v:0},{n:'OffDelay',t:'Int4',v:0},{n:'Inverted',t:'Boolean',v:false},{n:'Alarms',t:'UDT:AlarmSet'}]},
+DiscreteOutput:{p:null,f:[{n:'CMD',t:'Boolean',v:false},{n:'FB',t:'Boolean',v:false},{n:'Pulse',t:'Boolean',v:false},{n:'PulseTime',t:'Int4',v:500},{n:'Interlock',t:'Boolean',v:false},{n:'InterlockMsg',t:'String',v:''}]},
+PID:{p:null,f:[{n:'PV',t:'UDT:AnalogInput'},{n:'SP',t:'UDT:AnalogOutput'},{n:'OUT',t:'UDT:AnalogOutput'},{n:'Kp',t:'Float8',v:1},{n:'Ki',t:'Float8',v:.1},{n:'Kd',t:'Float8',v:.01},{n:'Mode',t:'Int4',v:2},{n:'Manual',t:'Boolean',v:false},{n:'Tracking',t:'Boolean',v:false},{n:'WindupGuard',t:'Float8',v:100},{n:'DeadBand',t:'Float8',v:0.5},{n:'Alarms',t:'UDT:AlarmSet'}]},
+Sequencer:{p:null,f:[{n:'Step',t:'Int4',v:0},{n:'Total',t:'Int4',v:0},{n:'Running',t:'Boolean',v:false},{n:'Paused',t:'Boolean',v:false},{n:'Timer',t:'Float8',v:0},{n:'StepName',t:'String',v:''},{n:'Fault',t:'Boolean',v:false},{n:'StartScript',t:'UDT:Script'},{n:'StepScript',t:'UDT:Script'},{n:'Alarms',t:'UDT:AlarmSet'}]},
+Valve:{p:null,f:[{n:'Open',t:'UDT:DiscreteInput'},{n:'Closed',t:'UDT:DiscreteInput'},{n:'Open_CMD',t:'UDT:DiscreteOutput'},{n:'Close_CMD',t:'UDT:DiscreteOutput'},{n:'Position',t:'UDT:AnalogInput'},{n:'Interlock',t:'UDT:DiscreteInput'},{n:'TravelTime',t:'Float8',v:10},{n:'FailMode',t:'String',v:'close'},{n:'Alarms',t:'UDT:AlarmSet'}]},
+Motor:{p:null,f:[{n:'Running',t:'UDT:DiscreteInput'},{n:'Fault',t:'UDT:DiscreteInput'},{n:'Ready',t:'UDT:DiscreteInput'},{n:'Start_CMD',t:'UDT:DiscreteOutput'},{n:'Stop_CMD',t:'UDT:DiscreteOutput'},{n:'Amps',t:'UDT:AnalogInput'},{n:'Speed',t:'UDT:AnalogInput'},{n:'HOA',t:'Int4',v:0},{n:'RunHours',t:'Float8',v:0},{n:'StartCount',t:'Int4',v:0},{n:'Alarms',t:'UDT:AlarmSet'}]},
+Pump:{p:'Motor',f:[{n:'Flow',t:'UDT:AnalogInput'},{n:'DischPress',t:'UDT:AnalogInput'},{n:'SuctPress',t:'UDT:AnalogInput'},{n:'SealTemp',t:'UDT:AnalogInput'}]},
+Tank:{p:null,f:[{n:'Level',t:'UDT:AnalogInput'},{n:'Temp',t:'UDT:AnalogInput'},{n:'Pressure',t:'UDT:AnalogInput'},{n:'Volume',t:'UDT:ExprTag'},{n:'Capacity',t:'Float8',v:1000},{n:'InletValve',t:'UDT:Valve'},{n:'OutletValve',t:'UDT:Valve'},{n:'LevelPID',t:'UDT:PID'},{n:'TempPID',t:'UDT:PID'},{n:'Alarms',t:'UDT:AlarmSet'},{n:'BatchSeq',t:'UDT:Sequencer'}]},
+PLCModule:{p:null,f:[{n:'Type',t:'String',v:''},{n:'FwVer',t:'String',v:''},{n:'Status',t:'Int4',v:0},{n:'Fault',t:'Boolean',v:false},{n:'CommOK',t:'Boolean',v:true},{n:'DiagCode',t:'Int4',v:0},{n:'Catalog',t:'String',v:''}]},
+PLCSlot:{p:null,f:[{n:'Module',t:'UDT:PLCModule'},{n:'SlotNum',t:'Int4',v:0},{n:'IOCount',t:'Int4',v:0},{n:'Type',t:'String',v:''}]},
+PLCRack:{p:null,f:[{n:'CPU',t:'UDT:PLCModule'},{n:'PS',t:'UDT:PLCModule'},{n:'Slot0',t:'UDT:PLCSlot'},{n:'Slot1',t:'UDT:PLCSlot'},{n:'Slot2',t:'UDT:PLCSlot'},{n:'Slot3',t:'UDT:PLCSlot'},{n:'RackNum',t:'Int4',v:0},{n:'CommOK',t:'Boolean',v:true}]},
+PLCDevice:{p:null,f:[{n:'Name',t:'String',v:''},{n:'IP',t:'String',v:''},{n:'Processor',t:'String',v:''},{n:'Rack0',t:'UDT:PLCRack'},{n:'CommOK',t:'Boolean',v:true},{n:'ScanRate',t:'Int4',v:1000},{n:'Alarms',t:'UDT:AlarmSet'}]},
+OPCConn:{p:null,f:[{n:'Server',t:'String',v:''},{n:'Endpoint',t:'String',v:''},{n:'Connected',t:'Boolean',v:false},{n:'Items',t:'Int4',v:0},{n:'ReadRate',t:'Int4',v:1000},{n:'Device',t:'UDT:PLCDevice'},{n:'Alarms',t:'UDT:AlarmSet'}]},
+PerspView:{p:null,f:[{n:'Path',t:'String',v:''},{n:'Params',t:'String',v:'{}'},{n:'Width',t:'Int4',v:800},{n:'Height',t:'Int4',v:600},{n:'OnStartup',t:'UDT:Script'},{n:'NQ_Data',t:'UDT:NamedQuery'}]},
+GatewayNode:{p:null,f:[{n:'Name',t:'String',v:''},{n:'URL',t:'String',v:''},{n:'Role',t:'String',v:'independent'},{n:'Version',t:'String',v:''},{n:'Uptime',t:'Float8',v:0},{n:'CPU',t:'Float8',v:0},{n:'Memory',t:'Float8',v:0},{n:'TagCount',t:'Int4',v:0},{n:'OPC1',t:'UDT:OPCConn'},{n:'Alarms',t:'UDT:AlarmSet'},{n:'HealthScript',t:'UDT:Script'}]},
+};
+
+// Merge PlantPAX UDTs from external file (window.PLANTPAX_UDTS)
+if(window.PLANTPAX_UDTS){Object.assign(U,window.PLANTPAX_UDTS);}
+
+// ═══ RESOLVE ═══
+function resolve(name,d=0){
+if(d>9||!U[name])return[];
+const def=U[name];let f=[];
+if(def.p)f=resolve(def.p,d+1);
+def.f.forEach(field=>{
+if(field.t.startsWith('UDT:')){
+resolve(field.t.slice(4),d+1).forEach(sf=>
+f.push({n:field.n+'/'+sf.n,t:sf.t,v:sf.v,d:sf.d+1}));
+}else f.push({n:field.n,t:field.t,v:field.v??'',d});
+});
+return f;
+}
+window.resolveUDT=resolve;
+window.U=U;
+
+// ═══ SQLITE ═══
+let db=null;
+async function initDB(){
+try{
+const SQL=await initSqlJs({locateFile:f=>`https://cdnjs.cloudflare.com/ajax/libs/sql.js/1.10.3/${f}`});
+db=new SQL.Database();
+db.run(`CREATE TABLE IF NOT EXISTS tags(id INTEGER PRIMARY KEY AUTOINCREMENT,path TEXT UNIQUE,name TEXT,type TEXT,value TEXT,quality INTEGER DEFAULT 192,timestamp TEXT DEFAULT(datetime('now')),udt_type TEXT,parent_path TEXT,depth INTEGER DEFAULT 0)`);
+db.run(`CREATE TABLE IF NOT EXISTS tag_history(id INTEGER PRIMARY KEY AUTOINCREMENT,path TEXT,value TEXT,quality INTEGER,timestamp TEXT DEFAULT(datetime('now')))`);
+db.run(`CREATE TABLE IF NOT EXISTS udt_defs(name TEXT PRIMARY KEY,parent TEXT,fields TEXT)`);
+db.run(`CREATE TABLE IF NOT EXISTS gateways(url TEXT PRIMARY KEY,name TEXT,status TEXT,last_ping TEXT)`);
+db.run(`CREATE TABLE IF NOT EXISTS scripts(id INTEGER PRIMARY KEY AUTOINCREMENT,code TEXT,result TEXT,timestamp TEXT DEFAULT(datetime('now')),scope TEXT)`);
+db.run(`CREATE INDEX IF NOT EXISTS idx_tp ON tags(path)`);
+db.run(`CREATE INDEX IF NOT EXISTS idx_hp ON tag_history(path)`);
+Object.entries(U).forEach(([n,d])=>db.run('INSERT OR REPLACE INTO udt_defs VALUES(?,?,?)',[n,d.p,JSON.stringify(d.f)]));
+$('dbSt').textContent='DB:ok';$('dbSt').style.color='var(--ok)';
+window.db=db;
+updateStats();
+addMsg('sys','SQLite ready. '+Object.keys(U).length+' UDTs ('+Object.keys(window.PLANTPAX_UDTS||{}).length+' PlantPAX). Seed data or connect a gateway.');
+}catch(e){$('dbSt').textContent='DB:err';addMsg('sys','DB: '+e.message);}}
+
+function updateStats(){
+if(!db)return;
+const tc=db.exec('SELECT COUNT(*) FROM tags')[0]?.values[0][0]||0;
+const hc=db.exec('SELECT COUNT(*) FROM tag_history')[0]?.values[0][0]||0;
+$('tagCt').textContent=tc;
+$('dbStats').innerHTML=`<div><span class="k">tags:</span><span class="v">${tc}</span></div><div><span class="k">hist:</span><span class="v">${hc}</span></div><div><span class="k">udts:</span><span class="v">${Object.keys(U).length}</span></div><div><span class="k">ppx:</span><span class="v">${Object.keys(window.PLANTPAX_UDTS||{}).length}</span></div>`;
+}
+
+function createInstance(path,udt){
+if(!db||!U[udt])return 0;
+const fields=resolve(udt);let c=0;
+fields.forEach(f=>{
+const fp=path+'/'+f.n;
+const val=f.t==='Boolean'?(Math.random()>.7?'true':'false'):f.t==='Float8'?(Math.random()*100).toFixed(2):f.t==='Int4'?Math.floor(Math.random()*5).toString():f.t==='DateTime'?new Date().toISOString():f.v?.toString()||'';
+try{db.run('INSERT OR REPLACE INTO tags VALUES(NULL,?,?,?,?,192,datetime("now"),?,?,?)',[fp,f.n.split('/').pop(),f.t,val,udt,path,f.d]);c++;}catch(e){}
+});
+return c;
+}
+window.createInstance=createInstance;
+
+function seedDB(){if(!db)return;
+const insts=[['[default]Plant/PS1','Pump'],['[default]Plant/TK-101','Tank'],['[default]Plant/V-201','Valve'],['[default]Plant/M-301','Motor']];
+let total=0;insts.forEach(([p,u])=>total+=createInstance(p,u));
+updateStats();refreshTagTree();refreshUDTTree();
+addMsg('sys','Seeded '+insts.length+' instances → '+total+' tags.');
+}
+window.seedDB=seedDB;
+
+function seedPLC(){if(!db)return;
+const insts=[['[Ignition OPC-UA Server]PLC1','PLCDevice'],['[Ignition OPC-UA Server]PLC2','PLCDevice']];
+let total=0;insts.forEach(([p,u])=>total+=createInstance(p,u));
+updateStats();refreshTagTree();
+addMsg('sys','Seeded '+insts.length+' PLCs → '+total+' tags.');
+}
+window.seedPLC=seedPLC;
+
+function seedPlantPAX(){if(!db||!window.PLANTPAX_UDTS)return;
+const insts=[
+ ['[default]PPX/AI-1001','P_AIn'],['[default]PPX/AO-1002','P_AOut'],
+ ['[default]PPX/DI-2001','P_DIn'],['[default]PPX/DO-2002','P_DOut'],
+ ['[default]PPX/M-3001','P_Motor'],['[default]PPX/M-3002','P_MotorRevFL'],
+ ['[default]PPX/VFD-3003','P_PF755'],
+ ['[default]PPX/V-4001','P_ValveSO'],['[default]PPX/V-4002','P_ValveMO'],
+ ['[default]PPX/V-4003','P_ValveStats'],['[default]PPX/V-4004','P_ValveHO'],
+ ['[default]PPX/PID-5001','P_PIDE'],
+ ['[default]PPX/MODE-6001','P_Mode'],['[default]PPX/PERM-6002','P_Permissive'],
+ ['[default]PPX/INTLK-6003','P_Interlock'],['[default]PPX/RST-6004','P_Restart'],
+ ['[default]PPX/PSL-7001','P_PSL'],['[default]PPX/GATE-7002','P_Gate'],
+ ['[default]PPX/RT-7003','P_RunTime'],['[default]PPX/RES-7004','P_Reset']
+];
+let total=0;insts.forEach(([p,u])=>total+=createInstance(p,u));
+updateStats();refreshTagTree();refreshUDTTree();
+addMsg('sys','Seeded '+insts.length+' PlantPAX instances → '+total+' tags. Open ⚙️ PlantPAX tab to generate Perspective views.');
+}
+window.seedPlantPAX=seedPlantPAX;
+
+// ═══ GATEWAYS ═══
+const gateways=[];
+async function addGateway(){
+const url=$('gwUrl').value.trim();if(!url)return;
+const gw={url,name:url.replace(/https?:\/\//,'').split(':')[0],user:$('gwUser').value,pass:$('gwPass').value,status:'pending'};
+gateways.push(gw);
+if(db)db.run("INSERT OR REPLACE INTO gateways VALUES(?,?,?,datetime('now'))",[gw.url,gw.name,'pending']);
+renderGateways();
+addMsg('sys','Probing: '+url+'...');
+try{const r=await fetch(url+'/StatusPing',{signal:AbortSignal.timeout(5000)});
+gw.status=r.ok?'online':'error';if(r.ok)addMsg('sys','✓ '+gw.name+' online');
+}catch(e){gw.status='offline';addMsg('sys','Unreachable. Local DB still works.');}
+if(db)db.run("UPDATE gateways SET status=?,last_ping=datetime('now') WHERE url=?",[gw.status,gw.url]);
+renderGateways();$('gwSt').textContent=gateways.filter(g=>g.status==='online').length+'/'+gateways.length+' gw';
+}
+window.addGateway=addGateway;
+window.gateways=gateways;
+
+function renderGateways(){
+$('gwCards').innerHTML=gateways.map(g=>`<div class="gw ${g.status==='online'?'ok':g.status==='offline'?'err':'pen'}">
+<span style="color:${g.status==='online'?'var(--ok)':g.status==='offline'?'var(--er)':'var(--wr)'}">●</span> ${g.name}
+<span class="d">${g.status}</span></div>`).join('');
+}
+
+// ═══ SCRIPT CONSOLE ═══
+function runScript(){
+const code=$('scriptIn').value.trim();if(!code)return;
+const out=$('consoleOut');const div=document.createElement('div');
+div.innerHTML=`<div style="color:var(--ig);font-size:7px;margin-top:4px">>>> ${code}</div>`;
+let result='';
+try{
+if(code.includes('system.tag.readBlocking')){const m=code.match(/\['([^']+)'\]/);if(m&&db){const r=db.exec("SELECT value,quality FROM tags WHERE path LIKE '%"+m[1]+"%' LIMIT 5");result=r.length?JSON.stringify(r[0].values):'[Tag not found]';}}
+else if(code.includes('system.tag.browse')){const m=code.match(/'([^']+)'/);if(m&&db){const r=db.exec("SELECT DISTINCT path FROM tags WHERE path LIKE '"+m[1]+"%' LIMIT 10");result=r.length?r[0].values.map(v=>v[0]).join('\n'):'[Empty]';}}
+else if(code.includes('system.db.runQuery')){const m=code.match(/"([^"]+)"/);if(m&&db){const r=db.exec(m[1]);result=r.length?JSON.stringify(r[0].values.slice(0,5)):'[Empty]';}}
+else result='[Executed]';
+}catch(e){result='Error: '+e.message;}
+div.innerHTML+=`<div style="color:var(--ok);font-size:8px;white-space:pre-wrap">${result}</div>`;
+out.appendChild(div);out.scrollTop=1e6;
+if(db)db.run("INSERT INTO scripts VALUES(NULL,?,?,datetime('now'),'gateway')",[code,result]);
+}
+window.runScript=runScript;
+
+// ═══ TABS ═══
+function showTab(name,el){
+document.querySelectorAll('.tab').forEach(t=>t.classList.remove('on'));el.classList.add('on');
+$('chatPanel').style.display=name==='chat'?'flex':'none';
+$('consolePanel').style.display=name==='console'?'flex':'none';
+$('diagPanel').style.display=name==='diag'?'block':'none';
+$('ppxPanel').style.display=name==='plantpax'?'block':'none';
+$('atomicPanel').style.display=name==='atomic'?'flex':'none';
+if(name==='diag')renderDiag();
+if(name==='plantpax')renderPlantPAX();
+if(name==='atomic')renderAtomic();
+}
+window.showTab=showTab;
+
+function renderDiag(){
+$('diagPanel').innerHTML=`<div style="color:var(--gold);font-weight:600;margin-bottom:6px">🔧 System Diagnostics</div>
+<div><span class="k">WebGPU:</span> <span class="${navigator.gpu?'v':'e'}">${navigator.gpu?'Available':'Not available'}</span></div>
+<div><span class="k">Gateways:</span> <span class="v">${gateways.length} cfg / ${gateways.filter(g=>g.status==='online').length} online</span></div>
+<div><span class="k">Database:</span> <span class="${db?'v':'e'}">${db?'Ready':'Error'}</span></div>
+<div><span class="k">Tags:</span> <span class="v">${db?db.exec('SELECT COUNT(*) FROM tags')[0]?.values[0][0]||0:0}</span></div>
+<div><span class="k">UDTs:</span> <span class="v">${Object.keys(U).length}</span> (PlantPAX: ${Object.keys(window.PLANTPAX_UDTS||{}).length})</div>`;
+}
+
+// ═══ PlantPAX TAB ═══
+function renderPlantPAX(){
+if(!window.PLANTPAX_UDTS){$('ppxPanel').innerHTML='<span class="e">PlantPAX library not loaded.</span>';return;}
+const ppxList=Object.keys(window.PLANTPAX_UDTS);
+let instances=[];
+if(db){const r=db.exec("SELECT DISTINCT parent_path,udt_type FROM tags WHERE udt_type IN ('"+ppxList.join("','")+"') AND parent_path IS NOT NULL");
+if(r.length)instances=r[0].values.map(v=>({path:v[0],udt:v[1]}));}
+$('ppxPanel').innerHTML=`
+<div style="color:var(--gold);font-weight:600;margin-bottom:8px">⚙️ PlantPAX 5.0 Generator</div>
+<div style="font-size:7.5px;color:var(--t);margin-bottom:8px">Rockwell Process Object Library — ${ppxList.length} AOIs supported. Generate Perspective faceplates, Gateway tag XML, and SVG symbols.${window.PPX_TDB?` <span class="ok">· TDB:${Object.keys(window.PPX_TDB.udts).length}u/${Object.keys(window.PPX_TDB.components).length}c/${window.PPX_TDB.bytes}B</span>`:' <span class="e">· TDB:miss</span>'}</div>
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px">
+  <div><div style="color:var(--ig);font-size:7px;margin-bottom:3px">PLANTPAX UDT LIBRARY</div>
+    <div style="border:1px solid var(--b);border-radius:3px;max-height:280px;overflow-y:auto;padding:3px">
+    ${ppxList.map(n=>{const r=resolve(n).length;const def=window.PLANTPAX_UDTS[n];return `<div style="padding:2px 4px;cursor:pointer;border-bottom:1px solid rgba(26,32,48,.5);font-size:7px" onclick="window.ppxPreview('${n}')"><span style="color:var(--lav)">${n}</span> <span class="d">→${r}f</span><div style="color:var(--t2);font-size:6px">${def.desc||''}</div></div>`}).join('')}
+    </div>
+  </div>
+  <div><div style="color:var(--ig);font-size:7px;margin-bottom:3px">SEEDED INSTANCES (${instances.length})</div>
+    <div style="border:1px solid var(--b);border-radius:3px;max-height:280px;overflow-y:auto;padding:3px">
+    ${instances.length?instances.map(i=>`<div style="padding:2px 4px;cursor:pointer;border-bottom:1px solid rgba(26,32,48,.5);font-size:7px" onclick="window.ppxGen('${i.path}','${i.udt}')"><span style="color:var(--ok)">${i.path.split('/').pop()}</span> <span class="lv">${i.udt}</span><div style="color:var(--t2);font-size:6px">${i.path}</div></div>`).join(''):'<span class="d">Click ⚙️ SEED PPX in footer to load instances.</span>'}
+    </div>
+  </div>
+</div>
+<div style="display:flex;gap:4px;margin-bottom:8px;flex-wrap:wrap">
+  <button class="bt" onclick="window.ppxExportAll()">📦 Export All Tags XML</button>
+  <button class="bt" onclick="window.ppxExportPerspective()">🎨 Export Perspective Project</button>
+  <button class="bt" onclick="window.ppxExportGateway()">🌐 Export Gateway Backup</button>
+  <button class="bt" onclick="window.ppxShowTdb()">🔬 TDB Token-Grammar</button>
+  <button class="bt" onclick="window.ppxShowComponents()">🎛️ ia.* Components</button>
+  <button class="bt" onclick="window.ppxShowVersions()">📜 v3.5/4.0/5.0</button>
+  <button class="bt" onclick="window.ppxVerifyTdb()">✓ Verify TDB↔JS</button>
+</div>
+<div id="ppxPreview" style="border:1px solid var(--b);border-radius:3px;padding:8px;background:var(--card);min-height:160px;font-size:8px">
+  <span class="d">Click a UDT or instance above to preview Perspective faceplate / tag XML / SVG symbol.</span>
+</div>`;
+}
+
+window.ppxPreview=(name)=>{
+const def=window.PLANTPAX_UDTS[name];if(!def)return;
+const fields=resolve(name);
+const el=$('ppxPreview');
+el.innerHTML=`<div style="display:grid;grid-template-columns:240px 1fr;gap:10px">
+<div><div style="color:var(--lav);font-weight:600;font-size:9px">${name}</div>
+<div style="color:var(--t);font-size:7px;margin:2px 0 6px">${def.desc||''}</div>
+${window.ppxRenderSVG?window.ppxRenderSVG(name,'preview'):''}
+<div style="color:var(--ig);font-size:6.5px;margin-top:6px">FIELDS (${fields.length})</div>
+<div style="max-height:120px;overflow-y:auto;font-size:6px">${fields.slice(0,40).map(f=>`<div><span class="d">d${f.d}</span> <span class="v">${f.n}</span> <span class="d">${f.t}</span></div>`).join('')}${fields.length>40?`<div class="d">+${fields.length-40} more</div>`:''}</div>
+</div>
+<div><div style="color:var(--ig);font-size:6.5px">PERSPECTIVE FACEPLATE (faceplate.json)</div>
+<pre style="background:var(--bg);border:1px solid var(--b);padding:4px;font-size:6px;max-height:160px;overflow:auto">${JSON.stringify(window.ppxFaceplate?window.ppxFaceplate(name):{},null,1)}</pre>
+<div style="color:var(--ig);font-size:6.5px;margin-top:6px">GATEWAY TAG XML</div>
+<pre style="background:var(--bg);border:1px solid var(--b);padding:4px;font-size:6px;max-height:120px;overflow:auto">${(window.ppxTagXML?window.ppxTagXML(name,'[default]Example'):'').substring(0,800)}</pre>
+</div></div>`;
+};
+
+window.ppxGen=(path,udt)=>window.ppxPreview(udt);
+
+window.ppxExportAll=()=>{
+if(!db||!window.ppxTagXML)return;
+const r=db.exec("SELECT DISTINCT parent_path,udt_type FROM tags WHERE udt_type GLOB 'P_*' AND parent_path IS NOT NULL");
+let xml='<?xml version="1.0" encoding="UTF-8"?>\n<tags provider="default">\n';
+if(r.length)r[0].values.forEach(([p,u])=>{xml+=window.ppxTagXML(u,p);});
+xml+='</tags>\n';
+download('plantpax_tags.xml',xml,'application/xml');
+addMsg('sys','Exported plantpax_tags.xml');
+};
+
+window.ppxExportPerspective=()=>{
+if(!window.PLANTPAX_UDTS||!window.ppxFaceplate)return;
+const proj={name:'PlantPAX',title:'PlantPAX 5.0 Faceplates',views:{}};
+Object.keys(window.PLANTPAX_UDTS).forEach(n=>{
+proj.views['PlantPAX/'+n+'/faceplate']=window.ppxFaceplate(n);
+proj.views['PlantPAX/'+n+'/quick']=window.ppxQuick?window.ppxQuick(n):{};
+proj.views['PlantPAX/'+n+'/engineering']=window.ppxEngineering?window.ppxEngineering(n):{};
+});
+download('plantpax_perspective.json',JSON.stringify(proj,null,2),'application/json');
+addMsg('sys','Exported '+(Object.keys(proj.views).length)+' Perspective views.');
+};
+
+window.ppxExportGateway=()=>{
+const bk={name:'PlantPAX Gateway',version:'8.1.38',udts:window.PLANTPAX_UDTS,exported:new Date().toISOString()};
+download('plantpax_gateway.gwbk.json',JSON.stringify(bk,null,2),'application/json');
+addMsg('sys','Exported gateway backup snapshot.');
+};
+
+// ═══ TDB-driven views (db/plantpax.db) ═══
+const _tdb=()=>window.PPX_TDB;
+const _tdbHtml=h=>{const el=$('ppxPreview');if(el)el.innerHTML=h;};
+window.ppxShowTdb=()=>{const t=_tdb();if(!t){_tdbHtml('<span class="e">TDB not loaded.</span>');return;}
+const sample=Object.values(t.udts).slice(0,4);
+_tdbHtml(`<div style="color:var(--gold);font-weight:600;font-size:9px">🔬 plantpax.db · Token Grammar</div>
+<div style="color:var(--t);font-size:7px;margin:2px 0 6px">${t.bytes} bytes · ${Object.keys(t.udts).length} UDTs · ${Object.keys(t.tokens).length} tokens · ${Object.keys(t.components).length} ia.* components</div>
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
+<div><div style="color:var(--ig);font-size:7px">TOKEN DICTIONARY</div>
+<div style="border:1px solid var(--b);max-height:180px;overflow-y:auto;font-size:6.5px;padding:3px">
+${Object.entries(t.tokens).map(([k,v])=>`<div><span class="lv">${k}</span> <span class="d">→</span> <span class="v">${v}</span></div>`).join('')}
+</div></div>
+<div><div style="color:var(--ig);font-size:7px">SAMPLE UDTs (expanded)</div>
+<div style="border:1px solid var(--b);max-height:180px;overflow-y:auto;font-size:6px;padding:3px">
+${sample.map(u=>`<div style="margin-bottom:4px"><span style="color:var(--lav);font-weight:600">!${u.name}</span>${u.parent?` <span class="d">[${u.parent}]</span>`:''} <span class="d">${u.fields.length}f</span>
+${u.fields.slice(0,8).map(f=>`<div style="margin-left:6px"><span class="ok">${f.nExp}</span> <span class="d">${f.tExp}</span></div>`).join('')}${u.fields.length>8?`<div class="d" style="margin-left:6px">+${u.fields.length-8}</div>`:''}
+</div>`).join('')}
+</div></div></div>
+<div style="margin-top:6px;color:var(--ig);font-size:7px">RAW (first 1200 chars)</div>
+<pre style="background:var(--bg);border:1px solid var(--b);padding:4px;font-size:6px;max-height:140px;overflow:auto">${t.raw.substring(0,1200).replace(/[<>]/g,c=>c==='<'?'&lt;':'&gt;')}</pre>`);};
+
+window.ppxShowComponents=()=>{const t=_tdb();if(!t){_tdbHtml('<span class="e">TDB not loaded.</span>');return;}
+const cats={};Object.entries(t.components).forEach(([k,v])=>{const c=k.split('.')[1]||'misc';(cats[c]=cats[c]||[]).push([k,v]);});
+_tdbHtml(`<div style="color:var(--gold);font-weight:600;font-size:9px">🎛️ Verified Ignition Perspective Components</div>
+<div style="color:var(--t);font-size:7px;margin:2px 0 6px">From docs.inductiveautomation.com/docs/8.1/appendix/components — used by faceplate generator.</div>
+<div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px">
+${Object.entries(cats).map(([cat,items])=>`<div><div style="color:var(--ig);font-size:7px;text-transform:uppercase">${cat} (${items.length})</div>
+<div style="border:1px solid var(--b);max-height:240px;overflow-y:auto;font-size:6.5px;padding:3px">
+${items.map(([k,v])=>`<div><span class="lv">${k}</span><div class="d" style="margin-left:6px">${v}</div></div>`).join('')}
+</div></div>`).join('')}</div>`);};
+
+window.ppxShowVersions=()=>{const t=_tdb();if(!t){_tdbHtml('<span class="e">TDB not loaded.</span>');return;}
+const v35=t.versions['v3.5']||{},v40=t.versions['v4.0']||{},v50=t.versions['v5.0']||{};
+const all=new Set([...(v35.base||[]),...(v40.add||[]),...(v50.add||[])]);
+_tdbHtml(`<div style="color:var(--gold);font-weight:600;font-size:9px">📜 PlantPAX Version Matrix</div>
+<div style="color:var(--t);font-size:7px;margin:2px 0 6px">Per-release UDT additions and behavior enhancements.</div>
+<div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px">
+<div><div style="color:var(--ig);font-size:7px">v3.5 BASE (${(v35.base||[]).length})</div>
+<div style="border:1px solid var(--b);max-height:200px;overflow-y:auto;font-size:6.5px;padding:3px">
+${(v35.base||[]).map(n=>`<div><span class="v">${n}</span></div>`).join('')}</div></div>
+<div><div style="color:var(--ig);font-size:7px">v4.0 ADD (${(v40.add||[]).length})</div>
+<div style="border:1px solid var(--b);max-height:200px;overflow-y:auto;font-size:6.5px;padding:3px">
+${(v40.add||[]).map(n=>`<div><span class="ok">+${n}</span></div>`).join('')}</div></div>
+<div><div style="color:var(--ig);font-size:7px">v5.0 ADD (${(v50.add||[]).length})</div>
+<div style="border:1px solid var(--b);max-height:200px;overflow-y:auto;font-size:6.5px;padding:3px">
+${(v50.add||[]).map(n=>`<div><span class="ok">+${n}</span></div>`).join('')}
+${(v50.enhance||[]).length?`<div style="margin-top:4px;color:var(--gold);font-size:6.5px">v5.0 ENHANCE</div>`+(v50.enhance||[]).map(n=>`<div><span class="lv">~${n}</span></div>`).join(''):''}
+</div></div></div>
+<div style="margin-top:6px;color:var(--t);font-size:6.5px">Total UDTs across releases: <span class="v">${all.size}</span> · TDB declares: <span class="v">${Object.keys(t.udts).length}</span></div>`);};
+
+window.ppxVerifyTdb=()=>{const t=_tdb();if(!t){_tdbHtml('<span class="e">TDB not loaded.</span>');return;}
+const js=window.PLANTPAX_UDTS||{};const jsKeys=Object.keys(js),tdbKeys=Object.keys(t.udts);
+const onlyJs=jsKeys.filter(k=>!t.udts[k]);const onlyTdb=tdbKeys.filter(k=>!js[k]);const both=jsKeys.filter(k=>t.udts[k]);
+const fieldDiff=both.map(k=>{const jf=resolve(k).map(f=>f.n.split('/').pop());const tf=t.udts[k].fields.map(f=>f.nExp);
+const jSet=new Set(jf),tSet=new Set(tf);return{n:k,jOnly:jf.filter(x=>!tSet.has(x)).length,tOnly:tf.filter(x=>!jSet.has(x)).length,common:jf.filter(x=>tSet.has(x)).length}}).filter(d=>d.jOnly||d.tOnly);
+_tdbHtml(`<div style="color:var(--gold);font-weight:600;font-size:9px">✓ TDB ↔ JS Cross-Verification</div>
+<div style="color:var(--t);font-size:7px;margin:2px 0 6px">JS=${jsKeys.length} UDTs · TDB=${tdbKeys.length} UDTs · shared=${both.length}</div>
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
+<div><div style="color:var(--ig);font-size:7px">ONLY IN JS (${onlyJs.length})</div>
+<div style="border:1px solid var(--b);max-height:120px;overflow-y:auto;font-size:6.5px;padding:3px">
+${onlyJs.map(n=>`<div class="lv">${n}</div>`).join('')||'<span class="ok">none</span>'}</div></div>
+<div><div style="color:var(--ig);font-size:7px">ONLY IN TDB (${onlyTdb.length})</div>
+<div style="border:1px solid var(--b);max-height:120px;overflow-y:auto;font-size:6.5px;padding:3px">
+${onlyTdb.map(n=>`<div class="ok">+${n}</div>`).join('')||'<span class="d">none</span>'}</div></div>
+</div>
+<div style="color:var(--ig);font-size:7px;margin-top:6px">FIELD DELTAS (${fieldDiff.length} UDTs differ)</div>
+<div style="border:1px solid var(--b);max-height:140px;overflow-y:auto;font-size:6.5px;padding:3px">
+<table style="width:100%;font-size:6.5px"><tr style="color:var(--ig)"><th align=left>UDT</th><th>shared</th><th>JS-only</th><th>TDB-only</th></tr>
+${fieldDiff.map(d=>`<tr><td><span class="lv">${d.n}</span></td><td align=center class="v">${d.common}</td><td align=center class="${d.jOnly?'wr':'d'}">${d.jOnly}</td><td align=center class="${d.tOnly?'ok':'d'}">${d.tOnly}</td></tr>`).join('')}
+</table></div>`);};
+
+// ════════════════════════════════════════════════════════════════════
+// 🧬 ATOMIC — periodic live tree of UDTs as nested SVG (atom→molecule→organism)
+// Prime-ratio nesting: depth d uses prime[d] = [2,3,5,7,11,13,17,19] for inset/scale.
+// ════════════════════════════════════════════════════════════════════
+const PRIMES=[2,3,5,7,11,13,17,19,23];
+const ATOMIC={
+  // category → categories of UDT for periodic table layout
+  cat(name){
+    if(/^P_(AIn|AOut|AInAdv)/.test(name))return'analog';
+    if(/^P_(DIn|DOut)/.test(name))return'discrete';
+    if(/^P_(Motor|PF|VFD)/.test(name))return'motor';
+    if(/^P_(Valve)/.test(name))return'valve';
+    if(/^P_(PIDE|PIDPID|RatioStation|LL|DeadTime)/.test(name))return'control';
+    if(/^P_(Mode|Permissive|Interlock|Restart|Reset|CmdSrc|Alarm|Notification|AlarmStd)/.test(name))return'core';
+    if(/^P_(PSL|Recipe|PhaseSig)/.test(name))return'sequence';
+    if(/^P_(Totalizer|RunTime|DoseFM|DoseWS|StrapTbl|DeviceMon|Logger|Gate)/.test(name))return'utility';
+    return'lib';
+  },
+  catColor:{analog:'#3a8',discrete:'#a83',motor:'#a3a',valve:'#3aa',control:'#84a',core:'#a55',sequence:'#aa3',utility:'#5a8',lib:'#666'},
+  catLabel:{analog:'ANALOG',discrete:'DISCRETE',motor:'MOTOR/DRIVE',valve:'VALVE',control:'CONTROL',core:'CORE',sequence:'SEQUENCE',utility:'UTILITY',lib:'LIBRARY'},
+
+  // Atom = single primitive field. Returns SVG element string.
+  // type: Boolean / Float8 / Int4 / String / DateTime ; v = current value
+  atom(field,val,size=12){
+    const t=field.t,n=field.n,id='a_'+Math.random().toString(36).slice(2,7);
+    const truthy=v=>v===true||v==='true'||v==='1'||v===1;
+    const num=v=>{const x=parseFloat(v);return isFinite(x)?x:0;};
+    if(t==='Boolean'){
+      const on=truthy(val);
+      return `<g class="atom atom-bool" data-n="${n}"><title>${n}=${val}</title>
+        <circle cx="${size/2}" cy="${size/2}" r="${size/2-1}" fill="${on?'#5fc26a':'#2a3040'}" stroke="${on?'#a8f0b0':'#3a4050'}" stroke-width=".5"/>
+        ${on?`<circle cx="${size/2}" cy="${size/2}" r="${size/4}" fill="#fff" opacity=".6"/>`:''}
+      </g>`;
+    }
+    if(t==='Float8'||t==='T10'){
+      const v=num(val);const pct=Math.max(0,Math.min(1,(v-0)/100));
+      return `<g class="atom atom-float" data-n="${n}"><title>${n}=${val}</title>
+        <rect x="0" y="0" width="${size*1.6}" height="${size}" fill="#1a2030" stroke="#3a4050" stroke-width=".5" rx="1"/>
+        <rect x=".5" y=".5" width="${(size*1.6-1)*pct}" height="${size-1}" fill="#5fa8d8" rx=".5"/>
+        <text x="${size*1.6/2}" y="${size*.75}" font-size="${size*.55}" text-anchor="middle" fill="#fff" font-family="monospace">${v.toFixed(1)}</text>
+      </g>`;
+    }
+    if(t==='Int4'||t==='T11'){
+      const v=num(val)|0;
+      return `<g class="atom atom-int" data-n="${n}"><title>${n}=${val}</title>
+        <rect x="0" y="0" width="${size*1.4}" height="${size}" fill="#2a1f30" stroke="#5a3a50" stroke-width=".5" rx="1"/>
+        <text x="${size*.7}" y="${size*.78}" font-size="${size*.65}" text-anchor="middle" fill="#f0a030" font-family="monospace">${v}</text>
+      </g>`;
+    }
+    if(t==='String'||t==='T12'){
+      const s=String(val||'').slice(0,8);
+      return `<g class="atom atom-str" data-n="${n}"><title>${n}=${val}</title>
+        <rect x="0" y="0" width="${size*2}" height="${size}" fill="#1a2820" stroke="#3a5040" stroke-width=".5" rx="1"/>
+        <text x="2" y="${size*.78}" font-size="${size*.5}" fill="#a8d8a8" font-family="monospace">${s}</text>
+      </g>`;
+    }
+    if(t==='DateTime'){
+      return `<g class="atom atom-dt" data-n="${n}"><title>${n}=${val}</title>
+        <rect x="0" y="0" width="${size*1.4}" height="${size}" fill="#202030" stroke="#404060" stroke-width=".5" rx="1"/>
+        <text x="${size*.7}" y="${size*.78}" font-size="${size*.5}" text-anchor="middle" fill="#9090c0" font-family="monospace">⏱</text>
+      </g>`;
+    }
+    // unknown / token leftover
+    return `<g class="atom atom-unk"><title>${n}:${t}</title><rect width="${size}" height="${size}" fill="#333" stroke="#555" rx="1"/></g>`;
+  },
+
+  // Molecule = a UDT, recursive. Walks primitive fields + ufield (nested UDT).
+  // depth controls prime-ratio inset.
+  molecule(udtName,inst,depth=0,maxDepth=4){
+    const T=window.PPX_TDB; const lib=window.U;
+    const def=(T&&T.udts[udtName])||lib[udtName];
+    if(!def||depth>=maxDepth)return{w:24,h:14,svg:`<g><rect width="24" height="14" fill="#222" stroke="#444" rx="1"/><text x="12" y="9" font-size="5" text-anchor="middle" fill="#888" font-family="monospace">${udtName}</text></g>`};
+
+    const fields = def.fields ? def.fields : (def.f||[]);
+    const cat=ATOMIC.cat(udtName);const col=ATOMIC.catColor[cat];
+    const atomSize=Math.max(6,12-depth*1.5);
+    const pad=PRIMES[depth]||2;
+    const cellW=atomSize*2+2,cellH=atomSize+2;
+    const cols=Math.min(8,Math.ceil(Math.sqrt(fields.length+1)));
+
+    let inner='',x=pad,y=pad+8,maxX=0,row=0,col_=0;
+    fields.forEach(f=>{
+      const fname=f.nExp||f.n; const ftype=f.t;
+      const isNested = ftype && ftype.startsWith('UDT:');
+      if(isNested){
+        const child=ATOMIC.molecule(ftype.slice(4),inst?inst[fname]:null,depth+1,maxDepth);
+        if(col_>0&&x+child.w>cols*cellW+pad){y+=Math.max(cellH,16)+pad;x=pad;col_=0;row++;}
+        inner+=`<g transform="translate(${x},${y})">${child.svg}</g>`;
+        x+=child.w+pad;maxX=Math.max(maxX,x);col_++;y=Math.max(y,y);
+        // bump y forward by child height for next row check
+        if(child.h>cellH){/* keep it inline */}
+      }else{
+        const val=inst?inst[fname]:(f.v??'');
+        if(col_>=cols){y+=cellH;x=pad;col_=0;row++;}
+        inner+=`<g transform="translate(${x},${y})">${ATOMIC.atom(f,val,atomSize)}</g>`;
+        x+=cellW;maxX=Math.max(maxX,x);col_++;
+      }
+    });
+    const w=Math.max(60,maxX+pad);
+    const h=y+cellH+pad+2;
+    const headerH=Math.max(7,10-depth);
+    const svg=`<g class="mol mol-${cat}" data-udt="${udtName}" data-depth="${depth}">
+      <rect width="${w}" height="${h+headerH}" fill="#0e1420" stroke="${col}" stroke-width="${Math.max(.4,1.2-depth*.2)}" rx="${PRIMES[depth]||2}"/>
+      <rect width="${w}" height="${headerH}" fill="${col}" opacity=".25" rx="${PRIMES[depth]||2}"/>
+      <text x="3" y="${headerH-1.5}" font-size="${Math.max(4,7-depth*.6)}" fill="${col}" font-family="monospace" font-weight="700">${udtName}</text>
+      <text x="${w-3}" y="${headerH-1.5}" font-size="${Math.max(3.5,5.5-depth*.4)}" fill="#888" font-family="monospace" text-anchor="end">${fields.length}f·d${depth}</text>
+      <g transform="translate(0,${headerH})">${inner}</g>
+    </g>`;
+    return{w,h:h+headerH,svg};
+  },
+
+  // Organism = full instance: molecule + chrome + live binding indicator
+  organism(path,udt,inst){
+    const m=ATOMIC.molecule(udt,inst,0,5);
+    const chrome=18;
+    return`<svg class="organism" viewBox="0 0 ${m.w+8} ${m.h+chrome+6}" width="${(m.w+8)*2.2}" height="${(m.h+chrome+6)*2.2}" style="display:block">
+      <rect width="${m.w+8}" height="${m.h+chrome+6}" fill="#070a12" stroke="#2a3040" rx="3"/>
+      <rect x="0" y="0" width="${m.w+8}" height="${chrome}" fill="#121826"/>
+      <circle cx="4" cy="${chrome/2}" r="1.6" fill="#5fc26a"><animate attributeName="opacity" values="1;.3;1" dur="2s" repeatCount="indefinite"/></circle>
+      <text x="9" y="${chrome*.55}" font-size="6" fill="#a8c0e0" font-family="monospace">${path}</text>
+      <text x="9" y="${chrome*.9}" font-size="4.5" fill="#5a7090" font-family="monospace">${udt} · ${ATOMIC.catLabel[ATOMIC.cat(udt)]}</text>
+      <g transform="translate(4,${chrome+2})">${m.svg}</g>
+    </svg>`;
+  },
+
+  // Read instance values from sql.js (live)
+  readInstance(path,udt){
+    if(!db)return{};
+    try{
+      const r=db.exec("SELECT name,value,type FROM tags WHERE parent_path=? ORDER BY id",[path]);
+      const obj={};
+      if(r.length)r[0].values.forEach(([n,v,t])=>{obj[n]=v;});
+      return obj;
+    }catch(e){return{};}
+  },
+
+  // Periodic table view — every UDT as a tile, grouped by category
+  renderPeriodic(){
+    const lib=window.U||{};
+    const tdb=window.PPX_TDB;
+    const all=new Set([...Object.keys(lib),...(tdb?Object.keys(tdb.udts):[])]);
+    const ppxOnly=[...all].filter(n=>n.startsWith('P_')).sort();
+    const groups={};
+    ppxOnly.forEach(n=>{const c=ATOMIC.cat(n);(groups[c]=groups[c]||[]).push(n);});
+    const order=['core','analog','discrete','motor','valve','control','sequence','utility','lib'];
+    let html=`<div style="padding:10px;display:flex;flex-direction:column;gap:8px">`;
+    order.forEach(g=>{
+      const items=groups[g];if(!items||!items.length)return;
+      html+=`<div><div style="color:${ATOMIC.catColor[g]};font-size:7px;font-weight:700;letter-spacing:1px;margin-bottom:4px">▸ ${ATOMIC.catLabel[g]} <span style="color:#666">(${items.length})</span></div>
+      <div style="display:flex;flex-wrap:wrap;gap:6px">
+      ${items.map(n=>{const m=ATOMIC.molecule(n,null,0,3);
+        return `<div class="mol-tile" data-udt="${n}" style="cursor:pointer;background:#0a0e18;border:1px solid #1a2030;border-radius:3px;padding:3px;transition:transform .15s,border-color .15s" onmouseover="this.style.borderColor='${ATOMIC.catColor[g]}';this.style.transform='translateY(-2px)'" onmouseout="this.style.borderColor='#1a2030';this.style.transform=''" onclick="window.atomicFocus('${n}')">
+          <svg viewBox="0 0 ${m.w} ${m.h}" width="${Math.min(180,m.w*2.4)}" height="${Math.min(110,m.h*2.4)}">${m.svg}</svg>
+        </div>`;
+      }).join('')}
+      </div></div>`;
+    });
+    // Live organisms — instances seeded in DB
+    if(db){
+      try{
+        const r=db.exec("SELECT DISTINCT parent_path,udt_type FROM tags WHERE udt_type GLOB 'P_*' AND parent_path IS NOT NULL ORDER BY parent_path");
+        const insts=r.length?r[0].values:[];
+        if(insts.length){
+          html+=`<div style="margin-top:8px"><div style="color:#5fc26a;font-size:7px;font-weight:700;letter-spacing:1px;margin-bottom:4px">▸ LIVE ORGANISMS <span style="color:#666">(${insts.length} seeded · auto-refresh 1s)</span></div>
+          <div id="atomicOrganisms" style="display:flex;flex-wrap:wrap;gap:6px"></div></div>`;
+        }
+      }catch(e){}
+    }
+    html+=`</div>`;
+    return html;
+  },
+
+  refreshOrganisms(){
+    const host=$('atomicOrganisms');if(!host||!db)return;
+    try{
+      const r=db.exec("SELECT DISTINCT parent_path,udt_type FROM tags WHERE udt_type GLOB 'P_*' AND parent_path IS NOT NULL ORDER BY parent_path");
+      const insts=r.length?r[0].values:[];
+      host.innerHTML=insts.map(([p,u])=>`<div style="background:#070a12;border-radius:3px" onclick="window.atomicFocus('${u}','${p}')">${ATOMIC.organism(p,u,ATOMIC.readInstance(p,u))}</div>`).join('');
+    }catch(e){}
+  },
+};
+
+let _atomicTimer=null;
+function renderAtomic(){
+  const panel=$('atomicPanel');
+  panel.innerHTML=`<div style="display:flex;align-items:center;gap:8px;padding:6px 10px;background:var(--card);border-bottom:1px solid var(--b);font-size:8px">
+    <span style="color:#a8f0b0;font-weight:700;letter-spacing:1px">🧬 ATOMIC</span>
+    <span class="d">atom→molecule→organism · prime-nest [${PRIMES.slice(0,5).join(',')}] · live·1Hz</span>
+    <span style="flex:1"></span>
+    <button class="bt" onclick="window.atomicReseed()">↻ RESEED</button>
+    <button class="bt" onclick="window.atomicTick()">⟳ REFRESH</button>
+    <button class="bt" onclick="window.atomicJitter()">⚡ JITTER</button>
+    <span class="d" id="atomicCount">—</span>
+  </div>
+  <div id="atomicGrid" style="flex:1;overflow:auto;background:#04060c"></div>`;
+  $('atomicGrid').innerHTML=ATOMIC.renderPeriodic();
+  ATOMIC.refreshOrganisms();
+  const lib=window.U||{};const tdb=window.PPX_TDB;
+  const ppxN=Object.keys(lib).filter(k=>k.startsWith('P_')).length;
+  $('atomicCount').textContent=`${ppxN} UDTs · ${tdb?Object.keys(tdb.udts).length:0} TDB`;
+  if(_atomicTimer)clearInterval(_atomicTimer);
+  _atomicTimer=setInterval(()=>{if($('atomicPanel').style.display!=='none')ATOMIC.refreshOrganisms();},1000);
+}
+
+window.atomicTick=()=>ATOMIC.refreshOrganisms();
+window.atomicReseed=()=>{if(window.seedPlantPAX){window.seedPlantPAX();renderAtomic();}};
+window.atomicJitter=()=>{
+  if(!db)return;
+  try{
+    // bump random Float8/Int4/Boolean values to show motion
+    const r=db.exec("SELECT id,type,value FROM tags WHERE udt_type GLOB 'P_*' ORDER BY RANDOM() LIMIT 80");
+    if(!r.length)return;
+    r[0].values.forEach(([id,t,v])=>{
+      let nv=v;
+      if(t==='Boolean')nv=Math.random()>.5?'true':'false';
+      else if(t==='Float8'||t==='T10')nv=(Math.random()*100).toFixed(2);
+      else if(t==='Int4'||t==='T11')nv=Math.floor(Math.random()*8).toString();
+      else return;
+      db.run("UPDATE tags SET value=?,timestamp=datetime('now') WHERE id=?",[nv,id]);
+    });
+    ATOMIC.refreshOrganisms();
+  }catch(e){console.warn(e);}
+};
+window.atomicFocus=(udt,path)=>{
+  const inst=path?ATOMIC.readInstance(path,udt):null;
+  const m=ATOMIC.molecule(udt,inst,0,6);
+  const overlay=document.createElement('div');
+  overlay.style.cssText='position:fixed;inset:0;background:rgba(0,0,0,.85);z-index:9999;display:flex;align-items:center;justify-content:center;padding:20px;cursor:zoom-out';
+  overlay.onclick=()=>overlay.remove();
+  overlay.innerHTML=`<div style="background:#04060c;border:1px solid #2a3040;border-radius:6px;padding:16px;max-width:96vw;max-height:96vh;overflow:auto" onclick="event.stopPropagation()">
+    <div style="display:flex;align-items:center;margin-bottom:8px">
+      <div style="font-family:monospace;color:#a8f0b0;font-size:11px">${path?path+' · ':''}${udt}</div>
+      <span style="flex:1"></span>
+      <button class="bt" onclick="this.closest('[style*=fixed]').remove()">✕</button>
+    </div>
+    <svg viewBox="0 0 ${m.w} ${m.h}" width="${Math.min(window.innerWidth*.9,m.w*4)}" height="${Math.min(window.innerHeight*.85,m.h*4)}">${m.svg}</svg>
+  </div>`;
+  document.body.appendChild(overlay);
+};
+window.ATOMIC=ATOMIC;
+window.renderAtomic=renderAtomic;
+
+function download(name,data,type){
+const blob=new Blob([data],{type});const u=URL.createObjectURL(blob);
+const a=document.createElement('a');a.href=u;a.download=name;a.click();
+}
+
+// ═══ MCP TOOLS ═══
+const TOOLS={
+'tag.read':{d:'Read tag',fn:a=>{if(!db)return{error:'no db'};const r=db.exec("SELECT path,value,type,quality FROM tags WHERE path LIKE '%"+(a.path||'').replace(/'/g,"''")+"%' LIMIT 10");return r.length?{tags:r[0].values.map(v=>({path:v[0],value:v[1],type:v[2],quality:v[3]}))}:{error:'not found'}}},
+'tag.write':{d:'Write tag',fn:a=>{if(!db)return{error:'no db'};db.run("UPDATE tags SET value=?,timestamp=datetime('now') WHERE path=?",[a.value,a.path]);return{ok:true}}},
+'tag.browse':{d:'Browse',fn:a=>{if(!db)return{error:'no db'};const p=a.path||'[default]';const r=db.exec("SELECT DISTINCT path FROM tags WHERE path LIKE ?||'/%' LIMIT 30",[p]);return{children:r.length?r[0].values.map(v=>v[0]):[]}}},
+'tag.search':{d:'Search',fn:a=>{if(!db)return{error:'no db'};const r=db.exec("SELECT path,value,type FROM tags WHERE path LIKE '%"+a.q+"%' LIMIT 20");return{results:r.length?r[0].values.map(v=>({path:v[0],value:v[1],type:v[2]})):[]}}},
+'udt.list':{d:'List UDTs',fn:()=>({udts:Object.entries(U).map(([n,d])=>({name:n,parent:d.p,fields:d.f.length,resolved:resolve(n).length}))})},
+'udt.detail':{d:'Resolve UDT',fn:a=>{const f=resolve(a.name);return f.length?{name:a.name,fields:f.map(x=>({name:x.n,type:x.t,depth:x.d}))}:{error:'not found'}}},
+'udt.create':{d:'Create instance',fn:a=>{const c=createInstance(a.path,a.udt_type);updateStats();refreshTagTree();return c?{ok:true,tags:c}:{error:'failed'}}},
+'plantpax.list':{d:'List PlantPAX UDTs',fn:()=>({udts:Object.keys(window.PLANTPAX_UDTS||{})})},
+'plantpax.faceplate':{d:'Generate faceplate',fn:a=>window.ppxFaceplate?window.ppxFaceplate(a.name):{error:'not loaded'}},
+'plantpax.tagxml':{d:'Generate tag XML',fn:a=>({xml:window.ppxTagXML?window.ppxTagXML(a.udt,a.path):'not loaded'})},
+'db.query':{d:'SQL',fn:a=>{if(!db)return{error:'no db'};try{const r=db.exec(a.sql);return r.length?{columns:r[0].columns,rows:r[0].values.slice(0,15)}:{result:'empty'}}catch(e){return{error:e.message}}}},
+'gw.status':{d:'Gateway status',fn:()=>({gateways:gateways.map(g=>({url:g.url,status:g.status}))})},
+'troubleshoot':{d:'Diagnose',fn:a=>{const kb={'tag not updating':'Check OPC, PLC mode, scan class, lease','quality bad':'Check PLC online, path, data type','comm failure':'Check IP/port/rack/slot','alarm flood':'ISA-18.2 <6/hr, deadband, shelving','session timeout':'Project props, auth, idP','script error':'Scope (gateway/client/session), system.util.getLogger','plantpax':'Check P_Mode owner override, P_Permissive bits, P_Interlock first-out'};const k=Object.keys(kb).find(k=>(a.issue||'').toLowerCase().includes(k));return k?{diagnosis:kb[k]}:{diagnosis:'Topics: '+Object.keys(kb).join(', ')};}},
+};
+$('mcpTools').innerHTML=Object.entries(TOOLS).map(([n,t])=>`<div style="padding:1px 0"><span class="o">${n}</span> <span class="d">${t.d}</span></div>`).join('');
+window.TOOLS=TOOLS;
+
+
+// ═══ EXTRA IGNITION TOOLS (system.tag.* / system.opc.* / system.alarm.* / system.util.*) ═══
+const _esc = s => String(s||'').replace(/'/g,"''");
+const _fail = m => ({error:m});
+Object.assign(TOOLS, {
+'tag.exists':{d:'Tag exists',fn:a=>{if(!db)return _fail('no db');const r=db.exec("SELECT COUNT(*) FROM tags WHERE path=?",[a.path||'']);return{exists:(r[0]?.values[0][0]||0)>0}}},
+'tag.queryHistory':{d:'Query tag history',fn:a=>{if(!db)return _fail('no db');const r=db.exec("SELECT timestamp,value,quality FROM tag_history WHERE path=? ORDER BY id DESC LIMIT ?",[a.path||'',a.limit||50]);return{rows:r.length?r[0].values:[]}}},
+'tag.storeHistory':{d:'Store history pt',fn:a=>{if(!db)return _fail('no db');try{db.run("INSERT INTO tag_history(path,value,quality) VALUES(?,?,?)",[a.path,String(a.value),a.quality??192]);return{ok:true}}catch(e){return _fail(e.message)}}},
+'tag.configure':{d:'Configure tag',fn:a=>{if(!db)return _fail('no db');try{db.run("UPDATE tags SET type=COALESCE(?,type),udt_type=COALESCE(?,udt_type) WHERE path=?",[a.type||null,a.udt_type||null,a.path]);return{ok:true}}catch(e){return _fail(e.message)}}},
+'tag.delete':{d:'Delete tag',fn:a=>{if(!db)return _fail('no db');db.run("DELETE FROM tags WHERE path=?",[a.path]);updateStats();refreshTagTree();return{ok:true}}},
+'opc.browseServer':{d:'OPC browse',fn:a=>{if(!db)return _fail('no db');const pre=a.prefix||'[Ignition OPC-UA Server]';const r=db.exec("SELECT DISTINCT path FROM tags WHERE path LIKE ?||'%' LIMIT 50",[pre]);return{nodes:r.length?r[0].values.map(v=>v[0]):[]}}},
+'opc.readValues':{d:'OPC bulk read',fn:a=>{if(!db)return _fail('no db');const paths=a.paths||[];const out=[];for(const p of paths){const r=db.exec("SELECT value,quality FROM tags WHERE path=?",[p]);out.push(r.length&&r[0].values.length?{path:p,value:r[0].values[0][0],quality:r[0].values[0][1]}:{path:p,error:'not found'});}return{values:out}}},
+'opc.writeValues':{d:'OPC bulk write',fn:a=>{if(!db)return _fail('no db');let ok=0;for(const w of (a.writes||[])){try{db.run("UPDATE tags SET value=?,timestamp=datetime('now') WHERE path=?",[String(w.value),w.path]);ok++;}catch(e){}}return{written:ok}}},
+'db.runScalarQuery':{d:'Scalar SQL',fn:a=>{if(!db)return _fail('no db');try{const r=db.exec(a.sql);return{value:r.length&&r[0].values.length?r[0].values[0][0]:null}}catch(e){return _fail(e.message)}}},
+'db.runUpdateQuery':{d:'UPDATE/INSERT/DELETE',fn:a=>{if(!db)return _fail('no db');try{db.run(a.sql);return{ok:true,changes:db.getRowsModified?.()||0}}catch(e){return _fail(e.message)}}},
+'alarm.queryStatus':{d:'Active alarms',fn:()=>{if(!db)return _fail('no db');const r=db.exec("SELECT path,value FROM tags WHERE path LIKE '%/Sts_InAlarm' AND value='true' LIMIT 50");return{active:r.length?r[0].values.map(v=>({path:v[0]})):[]}}},
+'alarm.acknowledge':{d:'Ack alarm',fn:a=>{if(!db)return _fail('no db');const base=(a.path||'').replace(/\/Sts_InAlarm$/,'');db.run("UPDATE tags SET value='true' WHERE path=?",[base+'/Cmd_Ack']);return{ok:true,acked:base}}},
+'alarm.shelve':{d:'Shelve alarm',fn:a=>{if(!db)return _fail('no db');const base=(a.path||'').replace(/\/Sts_InAlarm$/,'');db.run("UPDATE tags SET value='true' WHERE path=?",[base+'/Cmd_Shelve']);return{ok:true,shelved:base}}},
+'util.getLogger':{d:'Logger stub',fn:a=>({logger:a.name||'default',info:m=>console.log('[INFO]',a.name,m),warn:m=>console.warn('[WARN]',a.name,m),error:m=>console.error('[ERR]',a.name,m)})},
+'util.jsonEncode':{d:'JSON encode',fn:a=>{try{return{json:JSON.stringify(a.obj)}}catch(e){return _fail(e.message)}}},
+'util.jsonDecode':{d:'JSON decode',fn:a=>{try{return{obj:JSON.parse(a.json)}}catch(e){return _fail(e.message)}}},
+'dataset.toCSV':{d:'Query → CSV',fn:a=>{if(!db)return _fail('no db');try{const r=db.exec(a.sql);if(!r.length)return{csv:''};const cols=r[0].columns,rows=r[0].values;const csv=[cols.join(','),...rows.map(row=>row.map(c=>{const s=String(c??'');return /[",\n]/.test(s)?'"'+s.replace(/"/g,'""')+'"':s;}).join(','))].join('\n');return{csv}}catch(e){return _fail(e.message)}}},
+'perspective.sendMessage':{d:'Perspective msg',fn:a=>{console.log('[perspective.sendMessage]',a);addMsg('sys','perspective msg → '+(a.messageType||'?')+' '+JSON.stringify(a.payload||{}));return{ok:true,delivered:'session'}}},
+'health.check':{d:'System health',fn:()=>({fsm:window.FSM?Object.fromEntries(Object.entries(window.FSM.subs).map(([k,v])=>[k,{state:v.state,errs:v.errs,age:Math.round((Date.now()-v.since)/1000)+'s'}])):{}})},
+'health.heal':{d:'Force-heal subsystem',fn:a=>{if(!window.FSM)return _fail('FSM offline');const s=window.FSM.subs[a.name];if(!s)return _fail('unknown subsystem: '+a.name);return window.FSM.heal(a.name,true)}},
+});
+
+// ═══ EMOJI-KEYED MATRIX DISPATCH — M[category][verb] ═══
+const M = {
+  '🏷️':{read:'tag.read',write:'tag.write',browse:'tag.browse',search:'tag.search',exists:'tag.exists',queryHistory:'tag.queryHistory',storeHistory:'tag.storeHistory',configure:'tag.configure',delete:'tag.delete'},
+  '🔌':{browseServer:'opc.browseServer',readValues:'opc.readValues',writeValues:'opc.writeValues'},
+  '🗄️':{query:'db.query',scalar:'db.runScalarQuery',update:'db.runUpdateQuery'},
+  '🚨':{queryStatus:'alarm.queryStatus',acknowledge:'alarm.acknowledge',shelve:'alarm.shelve'},
+  '🛠️':{getLogger:'util.getLogger',jsonEncode:'util.jsonEncode',jsonDecode:'util.jsonDecode'},
+  '⚙️':{list:'plantpax.list',faceplate:'plantpax.faceplate',tagxml:'plantpax.tagxml'},
+  '📐':{list:'udt.list',detail:'udt.detail',create:'udt.create'},
+  '🌐':{status:'gw.status'},
+  '🩺':{troubleshoot:'troubleshoot',check:'health.check',heal:'health.heal'},
+  '🪟':{sendMessage:'perspective.sendMessage'},
+  '📊':{toCSV:'dataset.toCSV'},
+};
+// Wire matrix: each cell becomes a callable proxy
+for(const cat in M){const row=M[cat];for(const verb in row){const tname=row[verb];row[verb]=(args={})=>TOOLS[tname]?.fn(args)??_fail('no tool '+tname);row[verb].toolName=tname;}}
+window.M=M;
+
+// Re-render MCP panel grouped by emoji category — visually nicer + self-organizing
+const _catLabel={'🏷️':'TAG','🔌':'OPC','🗄️':'DB','🚨':'ALARM','🛠️':'UTIL','⚙️':'PLANTPAX','📐':'UDT','🌐':'GW','🩺':'HEALTH','🪟':'PERSPECTIVE','📊':'DATASET'};
+$('mcpTools').innerHTML=Object.entries(M).map(([cat,row])=>{
+  const rows=Object.entries(row).map(([verb,fn])=>{const tn=fn.toolName,tt=TOOLS[tn]?.d||'';return `<div style="padding:0 0 0 9px;font-size:6px"><span class="o">${verb}</span> <span class="d">${tt}</span></div>`}).join('');
+  return `<div style="padding:1px 0"><div style="font-size:6.5px"><span>${cat}</span> <span class="g">${_catLabel[cat]||cat}</span> <span class="d">(${Object.keys(row).length})</span></div>${rows}</div>`;
+}).join('');
+
+// ═══ FSM + SELF-HEALING ═══
+// 4 subsystems: SQLJS (script load), DB (sql.js init), LLM (web-llm), GW[i] (gateway probes)
+const FSM = (function(){
+  const subs = {
+    SQLJS: {state:'loading', since:Date.now(), errs:0, lastErr:null, nextRetry:0, heal:async()=>{const s=document.querySelector('script[src*="sql-wasm.js"]');if(s)s.remove();const n=document.createElement('script');n.src='https://cdnjs.cloudflare.com/ajax/libs/sql.js/1.10.3/sql-wasm.js';n.onload=async()=>{FSM.set('SQLJS','ready');await FSM.subs.DB.heal()};n.onerror=()=>FSM.set('SQLJS','err','script load failed');document.head.appendChild(n);return{ok:true,action:'reinjected sql-wasm'}}},
+    DB:    {state:'boot',    since:Date.now(), errs:0, lastErr:null, nextRetry:0, heal:async()=>{if(!window.initSqlJs)return{deferred:'sql.js not loaded yet'};try{await initDB();FSM.set('DB','ready');return{ok:true}}catch(e){FSM.set('DB','err',e.message);return _fail(e.message)}}},
+    LLM:   {state:'off',     since:Date.now(), errs:0, lastErr:null, nextRetry:0, heal:async()=>{if(llmReady)return{ok:true,note:'already ready'};try{await loadLLM();return{ok:llmReady}}catch(e){FSM.set('LLM','err',e.message);return _fail(e.message)}}},
+  };
+  function set(name,state,err){const s=subs[name];if(!s)return;s.state=state;s.since=Date.now();if(err){s.errs++;s.lastErr=err;}renderHeader();}
+  async function heal(name,force){const s=subs[name];if(!s)return _fail('unknown '+name);if(!force&&Date.now()<s.nextRetry)return{deferred:true,wait:s.nextRetry-Date.now()};const r=await s.heal();if(!r||r.error){s.nextRetry=Date.now()+Math.min(60000,1000*2**s.errs);}else if(s.state==='err'){set(name,'ready');}return r;}
+  // Per-gateway sub-FSM created on addGateway
+  function attachGateway(gw){const key='GW:'+gw.name;subs[key]={state:gw.status||'pending',since:Date.now(),errs:0,lastErr:null,nextRetry:0,heal:async()=>{try{const r=await fetch(gw.url+'/StatusPing',{signal:AbortSignal.timeout(5000)});gw.status=r.ok?'online':'error';set(key,gw.status);renderGateways();$('gwSt').textContent=gateways.filter(g=>g.status==='online').length+'/'+gateways.length+' gw';return{ok:r.ok}}catch(e){gw.status='offline';set(key,'offline',e.message);renderGateways();return _fail(e.message)}}};}
+  function renderHeader(){const states=Object.entries(subs).filter(([k])=>!k.startsWith('GW:')).map(([k,v])=>{const c=v.state==='ready'?'var(--ok)':v.state==='err'?'var(--er)':'var(--wr)';return `<span style="color:${c}">${k}:${v.state}</span>`}).join(' ');const slot=document.getElementById('fsmBar');if(slot)slot.innerHTML=states;}
+  // Periodic tick — heal anything in 'err' or stale-pending
+  function tick(){for(const name in subs){const s=subs[name];if(s.state==='err'||(s.state==='offline'&&name.startsWith('GW:'))){if(Date.now()>=s.nextRetry)heal(name).catch(()=>{});}}}
+  setInterval(tick,5000);
+  return {subs,set,heal,attachGateway,renderHeader,tick};
+})();
+window.FSM=FSM;
+
+// Inject FSM status into header bar
+(function(){const hdr=document.querySelector('.H');if(hdr){const sp=document.createElement('span');sp.id='fsmBar';sp.className='d';sp.style.cssText='font-size:6px;margin-left:6px';hdr.insertBefore(sp,hdr.querySelector('#llmSt'));FSM.renderHeader();}})();
+
+// Wrap addGateway so each new gateway gets an FSM sub
+(function(){const orig=window.addGateway;window.addGateway=async function(){const before=gateways.length;await orig.apply(this,arguments);for(let i=before;i<gateways.length;i++)FSM.attachGateway(gateways[i]);FSM.renderHeader();};})();
+
+// Wrap initDB / loadLLM to drive FSM transitions
+(function(){const oInit=window.initDB||initDB;window.initDB=async function(){FSM.set('DB','init');try{const r=await oInit.apply(this,arguments);FSM.set('DB',db?'ready':'err',db?null:'init returned no db');return r}catch(e){FSM.set('DB','err',e.message);throw e}};})();
+(function(){const oLLM=window.loadLLM;window.loadLLM=async function(){FSM.set('LLM','loading');try{const r=await oLLM.apply(this,arguments);FSM.set('LLM',llmReady?'ready':'err',llmReady?null:'load returned not-ready');return r}catch(e){FSM.set('LLM','err',e.message);throw e}};})();
+
+// SQLJS becomes 'ready' once initSqlJs is callable
+(function(){const tmr=setInterval(()=>{if(window.initSqlJs){FSM.set('SQLJS','ready');clearInterval(tmr);}},250);setTimeout(()=>clearInterval(tmr),30000);})();
+
+// ═══ TREES ═══
+function refreshTagTree(){
+if(!db)return;
+const r=db.exec("SELECT DISTINCT path,type,value FROM tags ORDER BY path LIMIT 400");
+if(!r.length){$('tagTree').innerHTML='<span class="d">No tags</span>';return;}
+const root={};
+r[0].values.forEach(([path,type,value])=>{const parts=path.split('/');let node=root;
+parts.forEach((p,i)=>{if(!node[p])node[p]={_c:{},_leaf:i===parts.length-1,_t:type,_v:value,_p:path};node=node[p]._c;});});
+function renderN(obj,d){let h='';
+Object.entries(obj).forEach(([name,data])=>{
+const hasK=Object.keys(data._c).length>0;const ico=data._leaf?(data._t==='Boolean'?'🔘':'📊'):'📁';
+h+=`<div class="tn${d<2?' open':''}"><div class="tl" onclick="this.parentElement.classList.toggle('open');${data._leaf?`selectTag('${data._p.replace(/'/g,"\\'")}')`:''}" style="padding-left:${d*8}px">`;
+h+=`<span class="arr">${hasK?'▸':' '}</span><span style="font-size:7px">${ico}</span>`;
+h+=`<span style="color:${data._leaf?'var(--ok)':'var(--ig)'};flex:1">${name}</span>`;
+if(data._leaf)h+=`<span class="d">${(data._v||'').substring(0,8)}</span>`;
+h+=`</div>${hasK?`<div class="tc">${renderN(data._c,d+1)}</div>`:''}</div>`;});return h;}
+$('tagTree').innerHTML=renderN(root,0);
+}
+window.refreshTagTree=refreshTagTree;
+
+function refreshUDTTree(){
+$('udtTree').innerHTML=Object.entries(U).map(([name,def])=>{
+const resolved=resolve(name);const isPpx=name.startsWith('P_');
+return`<div class="tn"><div class="tl" onclick="this.parentElement.classList.toggle('open');showUDT('${name}')">
+<span class="arr">▸</span><span style="font-size:7px">${isPpx?'⚙️':'📐'}</span>
+<span style="color:${isPpx?'var(--gold)':def.p?'var(--lav)':'var(--ig)'}">${name}</span>
+<span class="d">${def.p?'←'+def.p:''} (${resolved.length})</span></div>
+<div class="tc">${def.f.map(f=>`<div style="padding:0 3px 0 16px;font-size:6px"><span style="color:${f.t.startsWith('UDT')?'var(--lav)':'var(--ok)'}">${f.n}</span> <span class="d">${f.t}</span></div>`).join('')}</div></div>`;}).join('');
+}
+window.refreshUDTTree=refreshUDTTree;
+
+function selectTag(path){
+if(!db)return;const r=db.exec("SELECT * FROM tags WHERE path=?",[path]);
+if(!r.length||!r[0].values.length)return;const v=r[0].values[0];
+$('selTag').innerHTML=[['path',v[1]],['name',v[2]],['type',v[3]],['value',v[4]],['quality',v[5]],['udt',v[7]||'—'],['parent',v[8]||'—']].map(([k,val])=>`<div class="prop"><span class="pk">${k}</span><span class="pv">${val}</span></div>`).join('');
+}
+window.selectTag=selectTag;
+
+function showUDT(name){
+const fields=resolve(name);const def=U[name];const isPpx=name.startsWith('P_');
+$('udtDetail').innerHTML=`<div><span class="${isPpx?'g':'k'}">${name}</span>${def.p?` <span class="lv">←${def.p}</span>`:''}</div>
+<div><span class="d">direct:${def.f.length} resolved:${fields.length}${isPpx?' • PlantPAX':''}</span></div>
+${isPpx?`<div style="margin-top:2px"><button class="bt" onclick="showTab('plantpax',document.querySelector('.tab:nth-child(4)'));setTimeout(()=>window.ppxPreview('${name}'),50)" style="width:100%">→ View Faceplate</button></div>`:''}
+<div style="margin-top:2px;border-top:1px solid var(--b);padding-top:2px;max-height:80px;overflow-y:auto">${fields.slice(0,25).map(f=>
+`<div style="font-size:5.5px"><span class="d">d${f.d}</span> <span style="color:var(--ok)">${f.n}</span> <span class="d">${f.t}</span></div>`).join('')}${fields.length>25?`<div class="d">+${fields.length-25}</div>`:''}</div>`;
+}
+window.showUDT=showUDT;
+
+function runSQL(){if(!db)return;const sql=$('sqlIn').value.trim();if(!sql)return;
+try{const r=db.exec(sql);$('sqlOut').innerHTML=r.length?`<div style="color:var(--ig)">${r[0].columns.join('|')}</div>`+r[0].values.slice(0,10).map(row=>`<div>${row.join('|')}</div>`).join(''):'<span class="v">OK</span>';
+}catch(e){$('sqlOut').innerHTML=`<span class="e">${e.message}</span>`;}}
+window.runSQL=runSQL;
+
+function askTS(issue){$('chatIn').value=issue;send();}
+window.askTS=askTS;
+
+// ═══ CHAT ═══
+function addMsg(type,text){const d=document.createElement('div');d.className='msg '+type;
+if(type==='tool')d.innerHTML=text;else d.textContent=text;
+$('chatArea').appendChild(d);$('chatArea').scrollTop=1e6;return d;}
+window.addMsg=addMsg;
+
+let engine=null,llmReady=false,generating=false;
+const SYS_PROMPT=`Ignition SCADA + PlantPAX engineer assistant. Tools: tag.read/write/browse/search, udt.list/detail/create, plantpax.list/faceplate/tagxml, db.query, gw.status, troubleshoot. UDT hierarchy: 9 levels, 35+ types incl PlantPAX 5.0 (P_AIn, P_AOut, P_DIn, P_DOut, P_Motor, P_PF755, P_ValveSO/MO/HO/Stats, P_PIDE, P_Mode, P_Permissive, P_Interlock, P_Restart, P_PSL, P_Gate, P_RunTime, P_Reset). Tag paths: [provider]Folder/Instance/Member/Sub.`;
+
+async function loadLLM(){if(llmReady||generating)return;
+$('llmSt').textContent='LOADING';$('llB').textContent='⏳';addMsg('sys','Loading Llama 3.2 1B...');
+try{if(!navigator.gpu)throw new Error('WebGPU required');
+const webllm=await import('https://esm.run/@mlc-ai/web-llm');
+engine=await webllm.CreateMLCEngine('Llama-3.2-1B-Instruct-q4f16_1-MLC',{
+initProgressCallback:p=>{$('llmProg').style.width=(p.progress*100)+'%';$('llmSt').textContent=(p.text||'').substring(0,25)}});
+llmReady=true;$('llmSt').textContent='READY';$('llmSt').style.color='var(--ok)';
+$('llB').textContent='🧠';$('llB').classList.add('go');$('llmProg').style.width='100%';$('llmProg').style.background='var(--ok)';
+addMsg('sys','Model ready.');
+}catch(e){$('llmSt').textContent='ERR';$('llB').textContent='🧠';addMsg('sys','LLM: '+e.message);}}
+window.loadLLM=loadLLM;
+
+async function send(){
+const input=$('chatIn').value.trim();if(!input)return;$('chatIn').value='';addMsg('user',input);
+const direct=parseToolCall(input);
+if(direct){const r=await execTool(direct);addMsg('tool','<b>→'+direct.tool+'</b><pre>'+JSON.stringify(r,null,1).substring(0,500)+'</pre>');return;}
+const ts=TOOLS.troubleshoot.fn({issue:input});
+if(ts.diagnosis&&!ts.diagnosis.startsWith('Topics'))addMsg('tool','<b>→troubleshoot</b><pre>'+ts.diagnosis+'</pre>');
+if(!llmReady){addMsg('sys','Load model or use JSON: {"tool":"tag.browse","path":"[default]"}');return;}
+generating=true;const botDiv=addMsg('bot','');
+try{const chunks=await engine.chat.completions.create({
+messages:[{role:'system',content:SYS_PROMPT},{role:'user',content:input}],
+max_tokens:300,temperature:0.3,stream:true});
+let full='';for await(const chunk of chunks){full+=(chunk.choices[0]?.delta?.content||'');botDiv.textContent=full;$('chatArea').scrollTop=1e6;}
+const tm=full.match(/\{"tool"\s*:\s*"[^"]+"/);
+if(tm){try{const j=JSON.parse(full.substring(full.indexOf(tm[0]),full.indexOf('}',full.indexOf(tm[0]))+1));
+const r=await execTool(j);addMsg('tool','<b>→'+j.tool+'</b><pre>'+JSON.stringify(r,null,1).substring(0,500)+'</pre>');}catch(e){}}
+}catch(e){botDiv.textContent='Error: '+e.message;}
+generating=false;}
+window.send=send;
+
+function parseToolCall(t){try{const j=JSON.parse(t);if(j.tool)return j}catch(e){}return null}
+async function execTool(call){const t=TOOLS[call.tool];if(!t)return{error:'unknown: '+call.tool};
+const r=t.fn.constructor.name==='AsyncFunction'?await t.fn(call):t.fn(call);
+updateStats();refreshTagTree();return r;}
+
+let rec=null,ch=[];
+async function toggleRec(){const b=$('rB');
+if(!rec||rec.state!=='recording'){try{const stream=await navigator.mediaDevices.getDisplayMedia({video:{frameRate:30},audio:true});
+const mime=MediaRecorder.isTypeSupported('video/mp4;codecs=avc1,opus')?'video/mp4;codecs=avc1,opus':'video/webm';
+rec=new MediaRecorder(stream,{mimeType:mime,videoBitsPerSecond:8e6});ch=[];
+rec.ondataavailable=e=>{if(e.data.size)ch.push(e.data)};
+rec.onstop=()=>{stream.getTracks().forEach(t=>t.stop());const bl=new Blob(ch,{type:mime}),u=URL.createObjectURL(bl),a=document.createElement('a');
+a.href=u;a.download='TagDB_v2'+(mime.includes('mp4')?'.mp4':'.webm');a.click();b.textContent='● REC';b.classList.remove('on')};
+stream.getVideoTracks()[0].onended=()=>{if(rec?.state==='recording')rec.stop()};
+rec.start(1000);b.textContent='■ STOP';b.classList.add('on');}catch(e){}}else{rec.stop()}}
+window.toggleRec=toggleRec;
+
+const script=document.createElement('script');
+script.src='https://cdnjs.cloudflare.com/ajax/libs/sql.js/1.10.3/sql-wasm.js';
+script.onload=async()=>{await initDB();await loadPpxTdb();refreshUDTTree();refreshTagTree();
+const t=window.PPX_TDB;
+addMsg('sys','TAG.DB v2 ready. '+Object.keys(U).length+' UDTs, '+Object.keys(window.PLANTPAX_UDTS||{}).length+' PlantPAX (JS) · '+(t?Object.keys(t.udts).length+' TDB · '+Object.keys(t.components).length+' ia.* components · '+t.bytes+'B':'TDB:miss')+'. Click ⚙️ SEED PPX, then open ⚙️ PlantPAX tab.');};
+document.head.appendChild(script);
+</script></body></html>
